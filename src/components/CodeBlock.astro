@@ -3,7 +3,7 @@
  * CodeBlock.astro — three-tab code panel for hero.
  *
  * Tabs: curl / Python / Node. Same chat-completions call. The shared
- * `base_url=https://api.tokenfleet.cn/v1` line and the `model="claude-opus-4-7"`
+ * `base_url=https://api.tokenfleet.cn/v1` line and the `model="deepseek-v4-pro"`
  * line carry indigo voltage to visualize the unified endpoint at a glance,
  * without forcing the visitor to read the body.
  *
@@ -33,7 +33,7 @@ const tabs = [
   -H "Authorization: Bearer $TOKENFLEET_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "model": "claude-opus-4-7",
+    "model": "deepseek-v4-pro",
     "messages": [{"role": "user", "content": "${prompt}"}]
   }'`,
     html: `<span class="cb-cmt"># ${t.code.comment}</span>
@@ -41,7 +41,7 @@ const tabs = [
   -H <span class="cb-str">"Authorization: Bearer $TOKENFLEET_API_KEY"</span> \\
   -H <span class="cb-str">"Content-Type: application/json"</span> \\
   -d <span class="cb-str">'{
-    "model": <span class="cb-hl">"claude-opus-4-7"</span>,
+    "model": <span class="cb-hl">"deepseek-v4-pro"</span>,
     "messages": [{"role": "user", "content": "${prompt}"}]
   }'</span>`,
   },
@@ -56,7 +56,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model="claude-opus-4-7",
+    model="deepseek-v4-pro",
     messages=[{"role": "user", "content": "${prompt}"}],
 )
 print(resp.choices[0].message.content)`,
@@ -68,7 +68,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model=<span class="cb-hl">"claude-opus-4-7"</span>,
+    model=<span class="cb-hl">"deepseek-v4-pro"</span>,
     messages=[{<span class="cb-str">"role"</span>: <span class="cb-str">"user"</span>, <span class="cb-str">"content"</span>: <span class="cb-str">"${prompt}"</span>}],
 )
 <span class="cb-fn">print</span>(resp.choices[<span class="cb-num">0</span>].message.content)`,
@@ -84,7 +84,7 @@ const client = new OpenAI({
 });
 
 const resp = await client.chat.completions.create({
-  model: "claude-opus-4-7",
+  model: "deepseek-v4-pro",
   messages: [{ role: "user", content: "${prompt}" }],
 });
 console.log(resp.choices[0].message.content);`,
@@ -96,7 +96,7 @@ console.log(resp.choices[0].message.content);`,
 });
 
 <span class="cb-kw">const</span> resp = <span class="cb-kw">await</span> client.chat.completions.<span class="cb-fn">create</span>({
-  model: <span class="cb-hl">"claude-opus-4-7"</span>,
+  model: <span class="cb-hl">"deepseek-v4-pro"</span>,
   messages: [{ role: <span class="cb-str">"user"</span>, content: <span class="cb-str">"${prompt}"</span> }],
 });
 <span class="cb-fn">console</span>.log(resp.choices[<span class="cb-num">0</span>].message.content);`,

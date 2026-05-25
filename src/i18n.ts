@@ -28,7 +28,7 @@ export const i18n = {
     seo: {
       homeTitle: 'TokenFleet · 一个 API key，接入全部主流大模型',
       homeDescription:
-        '通过统一 API 网关聚合 OpenAI、Anthropic、Google、DeepSeek、Qwen 等生产级 LLM、图像、视频模型。一个 API key，一份发票，国内直连。',
+        '通过统一 API 网关聚合 DeepSeek、Moonshot、MiniMax、智谱 等生产级 LLM 模型。一个 API key，一份发票，国内直连。',
       modelsTitle: (total: number) => `全部 ${total} 个模型 · TokenFleet`,
       modelsDescription: (total: number, vendorCount: number) =>
         `覆盖 ${vendorCount} 家厂商的 ${total} 个生产级 AI 模型。一个 endpoint 调用所有，按厂商筛选、按价格排序、查看官方简介与完整价格分解。`,
@@ -51,9 +51,9 @@ export const i18n = {
       titlePrefix: '一个平台',
       titleRest: '调用多家主流模型。',
       bodyBefore:
-        '通过 TokenFleet 聚合 OpenAI、Anthropic、Google、DeepSeek、Qwen 等',
+        '通过 TokenFleet 聚合 DeepSeek、Moonshot、MiniMax、智谱 等',
       bodyAfter:
-        '个生产级 LLM、图像、视频模型。一个 API key，一份发票，国内直连。',
+        '个生产级 LLM 模型。一个 API key，一份发票，国内直连。',
       docs: '查看文档',
       trustAria: '平台特性',
       trustModels: (total: number) => `${total} 个生产级模型`,
@@ -75,16 +75,16 @@ export const i18n = {
     featured: {
       eyebrow: '模型目录',
       title: (total: number) => `${total} 个生产级模型，\n一份计费。`,
-      body: '从 LLM、图像、视频到音频，全部走同一个 endpoint 与同一个对公账户。',
+      body: '全部走同一个 OpenAI 兼容 endpoint 与同一个对公账户。',
       viewAll: '查看全部模型',
       fallbackBlurb: '生产级模型接入',
       blurbs: {
-        'gpt-5.4': '前沿通用推理与多模态任务',
-        'claude-opus-4.7': '长任务代码与 Agent 工作流',
-        'gemini-3-pro-preview': '长上下文与多模态理解',
+        'deepseek-v4-pro': 'DeepSeek 新一代旗舰推理模型',
         'DeepSeek-V3.2': '高性价比推理与工具调用',
+        'kimi-k2.5': '原生视觉智能体引擎',
         'kimi-k2.6': '国产长文本与办公场景',
-        'sora-2-pro': '高保真视频生成',
+        'MiniMax-M2.7': '高效编程与自我迭代',
+        'glm-5.1': '智谱新一代语言模型',
       },
     },
     product: {
@@ -211,10 +211,10 @@ export const i18n = {
       eyebrow: '模型目录',
       title: (total: number) => `${total} 个生产级模型，\n一份 endpoint。`,
       body: (vendorCount: number) =>
-        `覆盖 LLM、图像、视频、音频 4 种形态，${vendorCount} 家厂商。按厂商筛选、按价格排序、点开查看官方简介与完整价格分解。`,
+        `覆盖 ${vendorCount} 家厂商的生产级 LLM 模型。按厂商筛选、按价格排序、点开查看官方简介与完整价格分解。`,
       statsModels: (total: number) => `${total}个模型`,
       statsVendors: (vendorCount: number) => `${vendorCount}家厂商`,
-      statsEndpoints: 'OpenAI / Anthropic / Gemini 3种 endpoint',
+      statsEndpoints: 'OpenAI 兼容 endpoint',
       filterAria: '模型筛选',
       vendorAria: '按厂商筛选',
       modalityAria: '按形态筛选',
@@ -303,7 +303,7 @@ export const i18n = {
     seo: {
       homeTitle: 'TokenFleet · One API key for leading AI models',
       homeDescription:
-        'TokenFleet unifies production LLM, image, and video models from OpenAI, Anthropic, Google, DeepSeek, Qwen, and more behind one API gateway, one key, and one invoice.',
+        'TokenFleet unifies production LLM models from DeepSeek, Moonshot, MiniMax, Zhipu, and more behind one API gateway, one key, and one invoice.',
       modelsTitle: (total: number) => `All ${total} models · TokenFleet`,
       modelsDescription: (total: number, vendorCount: number) =>
         `Browse ${total} production AI models across ${vendorCount} vendors. Filter by vendor, sort by price, and inspect official descriptions and pricing details.`,
@@ -326,9 +326,9 @@ export const i18n = {
       titlePrefix: 'One platform',
       titleRest: 'for leading models.',
       bodyBefore:
-        'TokenFleet aggregates production LLM, image, and video models from OpenAI, Anthropic, Google, DeepSeek, Qwen, and more:',
+        'TokenFleet aggregates production LLM models from DeepSeek, Moonshot, MiniMax, Zhipu, and more:',
       bodyAfter:
-        'models through one API key, one invoice, and direct mainland connectivity.',
+        ' models through one API key, one invoice, and direct mainland connectivity.',
       docs: 'View docs',
       trustAria: 'Platform features',
       trustModels: (total: number) => `${total} production models`,
@@ -351,16 +351,16 @@ export const i18n = {
       eyebrow: 'MODELS GALLERY',
       title: (total: number) =>
         `${total} production models,\none billing layer.`,
-      body: 'LLMs, image, video, and audio models all share one endpoint and one business account.',
+      body: 'All models share one OpenAI-compatible endpoint and one business account.',
       viewAll: 'View all models',
       fallbackBlurb: 'Production model access',
       blurbs: {
-        'gpt-5.4': 'Frontier reasoning and multimodal work',
-        'claude-opus-4.7': 'Long-running coding and agent workflows',
-        'gemini-3-pro-preview': 'Long-context multimodal understanding',
+        'deepseek-v4-pro': 'Next-gen DeepSeek flagship reasoning model',
         'DeepSeek-V3.2': 'Efficient reasoning and tool use',
+        'kimi-k2.5': 'Native visual agent engine',
         'kimi-k2.6': 'Long-form Chinese documents and office tasks',
-        'sora-2-pro': 'High-fidelity video generation',
+        'MiniMax-M2.7': 'Efficient coding with self-iteration',
+        'glm-5.1': 'Next-gen Zhipu language model',
       },
     },
     product: {
@@ -498,10 +498,10 @@ export const i18n = {
       eyebrow: 'MODELS CATALOG',
       title: (total: number) => `${total} production models,\none endpoint.`,
       body: (vendorCount: number) =>
-        `Covering LLM, image, video, and audio across ${vendorCount} vendors. Filter by vendor, sort by price, and open each model for official descriptions and full pricing details.`,
+        `Covering production LLM models across ${vendorCount} vendors. Filter by vendor, sort by price, and open each model for official descriptions and full pricing details.`,
       statsModels: (total: number) => `${total} models`,
       statsVendors: (vendorCount: number) => `${vendorCount} vendors`,
-      statsEndpoints: 'OpenAI / Anthropic / Gemini 3 endpoint types',
+      statsEndpoints: 'OpenAI-compatible endpoint',
       filterAria: 'Model filters',
       vendorAria: 'Filter by vendor',
       modalityAria: 'Filter by modality',

@@ -29,24 +29,21 @@ const allModels = loadModels();
 const total = totalModelCount();
 
 /**
- * Marquee selection: 12 models spanning 6 vendors × 4 modalities. Chosen for
- * proof-of-breadth, not exhaustiveness — the full catalog lives at /models.
- * Picks complement FeaturedModels (top-6) by adding sibling sizes (mini /
- * sonnet / flash / haiku) and modality coverage (image, video).
+ * Full catalog — all 12 production models across 4 vendors.
  */
 const marqueeIds = [
-  'gpt-5.4',
-  'gpt-5.4-mini',
-  'claude-opus-4.7',
-  'claude-sonnet-4.6',
-  'gemini-3-pro-preview',
-  'gemini-3-flash-preview',
+  'deepseek-v4-pro',
+  'deepseek-v4-flash',
   'DeepSeek-V3.2',
+  'DeepSeek-V3.2-A',
+  'deepseek-v3.1',
+  'deepseek-v3.2-exp',
   'kimi-k2.6',
-  'glm-5.1',
+  'kimi-k2.5',
   'MiniMax-M2.7',
-  'sora-2-pro',
-  'nano-banana-pro-reverse',
+  'MiniMax-M2.5',
+  'glm-5.1',
+  'deepseek-v3',
 ];
 const byId = new Map(allModels.map((m) => [m.model_name, m]));
 const marquee = marqueeIds
@@ -426,20 +423,20 @@ const cities = [
           <div class="endpoint-demo__row endpoint-demo__row--model">
             <span class="endpoint-demo__key">model:</span>
             <span class="endpoint-demo__values">
-              <span class="endpoint-demo__value is-active" data-vendor="openai"
-                >"gpt-5.4"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="anthropic"
-                >"claude-opus-4.7"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="google"
-                >"gemini-3-pro-preview"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="deepseek"
-                >"DeepSeek-V3.2"</span
+              <span class="endpoint-demo__value is-active" data-vendor="deepseek"
+                >"deepseek-v4-pro"</span
               >
               <span class="endpoint-demo__value" data-vendor="moonshot"
                 >"kimi-k2.6"</span
+              >
+              <span class="endpoint-demo__value" data-vendor="minimax"
+                >"MiniMax-M2.7"</span
+              >
+              <span class="endpoint-demo__value" data-vendor="zhipu"
+                >"glm-5.1"</span
+              >
+              <span class="endpoint-demo__value" data-vendor="deepseek"
+                >"DeepSeek-V3.2"</span
               >
             </span>
           </div>

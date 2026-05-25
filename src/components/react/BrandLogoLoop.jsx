@@ -7,38 +7,16 @@ const brandIcon = (file, title) => ({
 });
 
 const zhLogos = [
-  brandIcon('openai.svg', 'OpenAI'),
-  brandIcon('anthropic.svg', 'Anthropic'),
-  brandIcon('gemini-color.svg', 'Google Gemini'),
   brandIcon('deepseek-color.svg', 'DeepSeek'),
-  brandIcon('qwen-color.svg', '通义千问 Qwen'),
   brandIcon('kimi-color.svg', 'Kimi · Moonshot'),
+  brandIcon('minimax-color.svg', 'MiniMax'),
   brandIcon('zhipu-color.svg', '智谱 GLM'),
-  brandIcon('doubao-color.svg', '豆包 Doubao'),
-  brandIcon('mistral-color.svg', 'Mistral'),
-  brandIcon('meta-color.svg', 'Meta Llama'),
-  brandIcon('grok.svg', 'xAI Grok'),
-  brandIcon('cohere-color.svg', 'Cohere'),
-  brandIcon('perplexity-color.svg', 'Perplexity'),
-  brandIcon('groq.svg', 'Groq'),
-  brandIcon('sora-color.svg', 'Sora'),
-  brandIcon('midjourney.svg', 'Midjourney'),
-  brandIcon('stability-color.svg', 'Stability AI'),
-  brandIcon('runway.svg', 'Runway'),
-  brandIcon('suno.svg', 'Suno'),
-  brandIcon('elevenlabs.svg', 'ElevenLabs'),
 ];
 
 const enLogos = zhLogos.map((logo) => ({
   ...logo,
-  alt: logo.alt
-    .replace('通义千问 Qwen', 'Qwen')
-    .replace('智谱 GLM', 'Zhipu GLM')
-    .replace('豆包 Doubao', 'Doubao'),
-  title: logo.title
-    .replace('通义千问 Qwen', 'Qwen')
-    .replace('智谱 GLM', 'Zhipu GLM')
-    .replace('豆包 Doubao', 'Doubao'),
+  alt: logo.alt.replace('智谱 GLM', 'Zhipu GLM'),
+  title: logo.title.replace('智谱 GLM', 'Zhipu GLM'),
 }));
 
 export default function BrandLogoLoop({
