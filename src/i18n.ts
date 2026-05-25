@@ -50,10 +50,8 @@ export const i18n = {
       eyebrow: '统一模型 API',
       titlePrefix: '一个平台',
       titleRest: '调用多家主流模型。',
-      bodyBefore:
-        '通过 TokenFleet 聚合 DeepSeek、Moonshot、MiniMax、智谱 等',
-      bodyAfter:
-        '个生产级 LLM 模型。一个 API key，一份发票，国内直连。',
+      bodyBefore: '通过 TokenFleet 聚合 DeepSeek、Moonshot、MiniMax、智谱 等',
+      bodyAfter: '个生产级 LLM 模型。一个 API key，一份发票，国内直连。',
       docs: '查看文档',
       trustAria: '平台特性',
       trustModels: (total: number) => `${total} 个生产级模型`,
