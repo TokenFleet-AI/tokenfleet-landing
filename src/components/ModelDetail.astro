@@ -17,6 +17,7 @@ import {
 import { metaOf } from '../data/model-meta.ts';
 import { i18n, localePath, type Locale } from '../i18n.ts';
 import { DASHBOARD_URL } from '../site-links.ts';
+import { modelDefinition, modelFaq } from '../seo/model-faq.ts';
 
 interface Props {
   model: ModelWithSlug;
@@ -46,6 +47,10 @@ const contextLabel = meta?.contextK
 
 const modelsHref = localePath(locale, '/models');
 const homeHref = localePath(locale, '/');
+
+// 程序化定义块 + per-model FAQ（与 [slug].astro 注入的 FAQPage schema 同源）。
+const definition = modelDefinition(model, locale);
+const faqItems = modelFaq(model, locale);
 ---
 
 <article class="modeldetail">
@@ -80,6 +85,7 @@ const homeHref = localePath(locale, '/');
     <div class="modeldetail__grid">
       <section class="modeldetail__section">
         <h2 class="eyebrow eyebrow--mute">{t.models.detailIntro}</h2>
+        <p class="modeldetail__lead">{definition}</p>
         {
           canUseDescription ? (
             <p class="modeldetail__desc">{model.description}</p>
@@ -218,6 +224,20 @@ const homeHref = localePath(locale, '/');
       </section>
     </div>
 
+    <section class="modeldetail__section modeldetail__faq">
+      <h2 class="eyebrow eyebrow--mute">{t.models.faqTitle}</h2>
+      <dl class="faq-list">
+        {
+          faqItems.map((item) => (
+            <div class="faq-list__item">
+              <dt class="faq-list__q">{item.q}</dt>
+              <dd class="faq-list__a">{item.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
     <footer class="modeldetail__foot">
       <a class="btn btn--primary btn--lg" href={DASHBOARD_URL} rel="noopener">
         {t.models.console}
@@ -316,6 +336,12 @@ const homeHref = localePath(locale, '/');
     gap: 12px;
   }
 
+  .modeldetail__lead {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--color-ink);
+  }
+
   .modeldetail__desc {
     font-size: 14.5px;
     line-height: 1.65;
@@ -405,6 +431,28 @@ const homeHref = localePath(locale, '/');
   .endpoint__path {
     color: var(--color-ink-mute);
     word-break: break-all;
+  }
+
+  .modeldetail__faq {
+    padding-top: 28px;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .faq-list__q {
+    font-size: 14px;
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    margin-bottom: 5px;
+  }
+  .faq-list__a {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--color-ink-secondary);
   }
 
   .modeldetail__foot {

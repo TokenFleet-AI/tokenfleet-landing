@@ -216,6 +216,41 @@ export const i18n = {
         `通过 TokenFleet 统一 API 调用 ${vendor} 的 ${model}：${price}。一个 API key，OpenAI SDK 兼容，国内直连，查看上下文窗口、计费方式与完整价格分解。`,
       breadcrumbHome: '首页',
       backToModels: '返回模型目录',
+      faqTitle: '常见问题',
+    },
+    faq: {
+      eyebrow: '常见问题',
+      title: '关于 TokenFleet。',
+      items: [
+        {
+          q: 'TokenFleet 是什么？',
+          a: 'TokenFleet 是一站式 AI 模型 API 网关，把 DeepSeek、Moonshot、MiniMax、智谱 等厂商的生产级 LLM、图像、视频、音频模型聚合到同一个 OpenAI 兼容 endpoint：一个 API key、一份人民币对公发票，国内直连。',
+        },
+        {
+          q: '怎么接入？支持 OpenAI SDK 吗？',
+          a: '支持。TokenFleet 与 OpenAI SDK 兼容：保持原有请求体，把 base_url 换成 TokenFleet 的统一 endpoint，用同一个 API key 指定 model id 即可。同时支持 anthropic、gemini endpoint。',
+        },
+        {
+          q: 'TokenFleet 接入了哪些模型？',
+          a: '覆盖 DeepSeek、Moonshot、MiniMax、智谱 等厂商的生产级 LLM、图像、视频、音频模型，全部走同一个 endpoint 与同一个对公账户完成调用、计量与对账。完整清单见模型目录。',
+        },
+        {
+          q: '怎么计费？',
+          a: '按 token 或按调用次数计费，取决于具体模型。所有用量计入单一对公账户、人民币结算，统一对账与发票。',
+        },
+        {
+          q: '国内能直连吗，延迟如何？',
+          a: '支持国内直连，低延迟。北京、上海、广州、深圳、杭州等地按真实生产请求样本测得毫秒级首字延迟，实时数据见状态页。',
+        },
+        {
+          q: '能开发票、走对公付款吗？',
+          a: '可以。TokenFleet 支持人民币对公结算与增值税发票，合同主体为深圳市新云计算科技有限公司，多人协作账户与用量对账在控制台可见。',
+        },
+        {
+          q: '有企业级 SLA 和私有部署 / VPC 吗？',
+          a: '有。当用量越过自服务边界，可申请企业级 SLA（按用量等级与团队规模定制、月度可对账）、私有部署 / VPC 直连（请求不出私网边界）与 7×24 中文工程支持。联系销售：zhangyue@nyuncloud.com。',
+        },
+      ],
     },
     footer: {
       tagline:
@@ -236,6 +271,8 @@ export const i18n = {
         console: '控制台',
         sla: 'SLA 咨询',
         icp: 'ICP 备案',
+        pricingMd: '定价数据 (Markdown)',
+        llms: 'llms.txt',
       },
       followItems: [
         ['微信社群', 'TokenFleet 微信社群 QR 码'],
@@ -464,6 +501,41 @@ export const i18n = {
         `Call ${vendor}'s ${model} through the TokenFleet unified API: ${price}. One API key, OpenAI SDK compatible — see context window, billing and full price breakdown.`,
       breadcrumbHome: 'Home',
       backToModels: 'Back to models',
+      faqTitle: 'FAQ',
+    },
+    faq: {
+      eyebrow: 'FAQ',
+      title: 'About TokenFleet.',
+      items: [
+        {
+          q: 'What is TokenFleet?',
+          a: 'TokenFleet is a one-stop AI model API gateway. It aggregates production LLM, image, video and audio models from vendors like DeepSeek, Moonshot, MiniMax and Zhipu behind one OpenAI-compatible endpoint: one API key, one RMB business invoice, and direct mainland-China routing.',
+        },
+        {
+          q: 'How do I integrate? Is it OpenAI SDK compatible?',
+          a: 'Yes. TokenFleet is OpenAI SDK compatible: keep your existing request body, switch base_url to the TokenFleet unified endpoint, and use one API key to set the model id. Anthropic and Gemini endpoint types are also supported.',
+        },
+        {
+          q: 'Which models does TokenFleet support?',
+          a: 'Production LLM, image, video and audio models from vendors like DeepSeek, Moonshot, MiniMax and Zhipu, all called, metered and reconciled through one endpoint and one business account. See the models catalog for the full list.',
+        },
+        {
+          q: 'How does billing work?',
+          a: 'Models are billed per token or per call, depending on the model. All usage settles through a single RMB business account with unified reconciliation and invoicing.',
+        },
+        {
+          q: 'Is there direct mainland-China connectivity, and what about latency?',
+          a: 'Yes, direct mainland routing with low latency. Time to first token is measured in milliseconds across Beijing, Shanghai, Guangzhou, Shenzhen and Hangzhou from real production samples; see the status page for live data.',
+        },
+        {
+          q: 'Can you issue invoices and accept business payments?',
+          a: 'Yes. TokenFleet supports RMB business settlement and VAT invoices. The contracting entity is Shenzhen Xinyun Computing Technology Co., Ltd., and multi-user accounts with usage reconciliation are visible in the console.',
+        },
+        {
+          q: 'Do you offer an enterprise SLA and private deployment / VPC?',
+          a: 'Yes. When usage outgrows self-serve limits, you can request an enterprise SLA (tailored by usage tier and team size, with monthly reconciliation), private deployment / VPC direct connect (traffic stays inside your private network boundary), and 7x24 Chinese engineering support. Contact sales: zhangyue@nyuncloud.com.',
+        },
+      ],
     },
     footer: {
       tagline:
@@ -484,6 +556,8 @@ export const i18n = {
         console: 'Console',
         sla: 'SLA inquiry',
         icp: 'ICP filing',
+        pricingMd: 'Pricing (Markdown)',
+        llms: 'llms.txt',
       },
       followItems: [
         ['WeChat group', 'TokenFleet WeChat group QR code'],

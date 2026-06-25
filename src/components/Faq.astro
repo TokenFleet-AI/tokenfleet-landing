@@ -1,0 +1,111 @@
+---
+/**
+ * Faq.astro — 首页常见问答区块（zh / en 共享，文案来自 i18n.faq）。
+ *
+ * 渲染为静态可见 `<dl>`（无需 JS，AI 引擎可直接抽取），与 `index.astro` 注入的
+ * FAQPage JSON-LD 同源同字。视觉沿用站内编辑级 section 规范：eyebrow + thin 标题 +
+ * hairline 分隔的问答列表，浅色画布，禁营销腔。
+ */
+import { i18n, type Locale } from '../i18n.ts';
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = 'zh' } = Astro.props as Props;
+const t = i18n[locale];
+---
+
+<section class="faq" id="faq" aria-labelledby="faq-title">
+  <div class="container faq__inner">
+    <div class="faq__lede" data-reveal>
+      <span class="eyebrow eyebrow--mute">{t.faq.eyebrow}</span>
+      <h2 class="faq__title" id="faq-title">{t.faq.title}</h2>
+    </div>
+
+    <dl class="faq__list" data-reveal>
+      {
+        t.faq.items.map((item) => (
+          <div class="faq__item">
+            <dt class="faq__q">{item.q}</dt>
+            <dd class="faq__a">{item.a}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .faq {
+    background: var(--color-canvas);
+    padding-block: clamp(56px, 8vw, 96px);
+  }
+
+  .faq__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.4fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+
+  .faq__lede {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 96px;
+  }
+
+  .faq__title {
+    font-size: var(--type-display-xl-size);
+    line-height: var(--type-display-xl-line);
+    letter-spacing: var(--type-display-xl-track);
+    font-weight: var(--weight-thin);
+    color: var(--color-ink);
+  }
+
+  .faq__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .faq__item {
+    padding-block: 22px;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .faq__item:first-child {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .faq__item:last-child {
+    padding-bottom: 0;
+  }
+
+  .faq__q {
+    font-size: var(--type-heading-md-size);
+    line-height: 1.35;
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    margin-bottom: 10px;
+  }
+
+  .faq__a {
+    margin: 0;
+    font-size: var(--type-body-lg-size);
+    line-height: 1.65;
+    color: var(--color-ink-secondary);
+    max-width: 60ch;
+  }
+
+  @media (max-width: 880px) {
+    .faq__inner {
+      grid-template-columns: 1fr;
+    }
+    .faq__lede {
+      position: static;
+      top: auto;
+    }
+  }
+</style>

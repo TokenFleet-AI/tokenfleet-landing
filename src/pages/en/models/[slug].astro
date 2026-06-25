@@ -15,7 +15,10 @@ import {
 } from '../../../data/model-slug.ts';
 import { priceLabel, vendorDisplayName } from '../../../data/pricing.ts';
 import { modelSchema } from '../../../seo/model-schema.ts';
-import { i18n } from '../../../i18n.ts';
+import { breadcrumbSchema } from '../../../seo/breadcrumb-schema.ts';
+import { faqPageSchema } from '../../../seo/faq-schema.ts';
+import { modelFaq } from '../../../seo/model-faq.ts';
+import { i18n, localePath } from '../../../i18n.ts';
 
 export function getStaticPaths() {
   return modelsWithSlug().map((model) => ({
@@ -39,6 +42,24 @@ const description = t.models.detailDescription(
   vendorName,
   price
 );
+
+// 注入三段 schema：SoftwareApplication（实体）+ BreadcrumbList（层级，对齐可见面包屑）
+// + FAQPage（per-model 问答，与 ModelDetail 可见 FAQ 同源）。
+const jsonLd = [
+  modelSchema(model, locale, canonical),
+  breadcrumbSchema([
+    {
+      name: t.models.breadcrumbHome,
+      url: new URL(localePath(locale, '/'), Astro.site).toString(),
+    },
+    {
+      name: t.nav.links.models,
+      url: new URL(localePath(locale, '/models'), Astro.site).toString(),
+    },
+    { name: model.model_name, url: canonical },
+  ]),
+  faqPageSchema(modelFaq(model, locale)),
+];
 ---
 
 <Base
@@ -48,7 +69,7 @@ const description = t.models.detailDescription(
   canonical={canonical}
   alternateZh={alternateZh}
   alternateEn={canonical}
-  jsonLd={modelSchema(model, locale, canonical)}
+  jsonLd={jsonLd}
 >
   <TopNav locale={locale} currentPath="/models" />
   <main id="main">

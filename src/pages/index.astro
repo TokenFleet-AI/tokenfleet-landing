@@ -7,8 +7,10 @@ import FeaturedModels from '../components/FeaturedModels.astro';
 import TriCard from '../components/TriCard.astro';
 import WhyUs from '../components/WhyUs.astro';
 import Enterprise from '../components/Enterprise.astro';
+import Faq from '../components/Faq.astro';
 import Footer from '../components/Footer.astro';
 import { i18n, localePath } from '../i18n.ts';
+import { faqPageSchema } from '../seo/faq-schema.ts';
 
 const locale = 'zh';
 const t = i18n[locale];
@@ -21,6 +23,7 @@ const t = i18n[locale];
   canonical={new URL(localePath(locale, '/'), Astro.site).toString()}
   alternateZh={new URL('/', Astro.site).toString()}
   alternateEn={new URL('/en', Astro.site).toString()}
+  jsonLd={faqPageSchema(t.faq.items)}
 >
   <TopNav locale={locale} currentPath="/" />
   <main id="main">
@@ -30,6 +33,7 @@ const t = i18n[locale];
     <TriCard locale={locale} />
     <WhyUs locale={locale} />
     <Enterprise locale={locale} />
+    <Faq locale={locale} />
   </main>
   <Footer locale={locale} />
 </Base>
