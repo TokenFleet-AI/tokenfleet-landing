@@ -26,6 +26,7 @@ import wechatGroupQR from '../assets/QRCode/wechat-group.jpg';
 import wechatSubQR from '../assets/QRCode/wechat-sub.jpg';
 import douyinQR from '../assets/QRCode/douyin.webp';
 import { i18n, localePath, type Locale } from '../i18n.ts';
+import { DOCS_URL } from '../site-links.ts';
 
 interface Props {
   locale?: Locale;
@@ -49,7 +50,7 @@ const cols = [
       },
       {
         label: t.footer.links.docs,
-        href: 'https://docs.tokenfleet.cn',
+        href: DOCS_URL,
         external: true,
       },
     ],

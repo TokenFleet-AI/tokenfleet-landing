@@ -1,0 +1,96 @@
+---
+/**
+ * 404.astro — 自定义未找到页。
+ *
+ * 复用 Base + TopNav + Footer，locale 取中文（默认）。输出 noindex
+ * 避免错误页进入索引；提供返回首页 / 模型页内链与英文兜底，给爬虫与
+ * 误入用户一条明确出路。
+ */
+import Base from '../layouts/Base.astro';
+import TopNav from '../components/TopNav.astro';
+import Footer from '../components/Footer.astro';
+
+const locale = 'zh';
+---
+
+<Base locale={locale} title="页面未找到 · TokenFleet" noindex={true}>
+  <TopNav locale={locale} currentPath="/" />
+  <main id="main" class="notfound">
+    <div class="container notfound__inner">
+      <span class="eyebrow notfound__code mono">404</span>
+      <h1 class="notfound__title">这个页面不存在</h1>
+      <p class="notfound__body">
+        链接可能已失效，或地址有误。回到首页，或直接浏览全部可用模型。
+      </p>
+      <div class="notfound__actions">
+        <a href="/" class="btn btn--primary btn--lg">返回首页</a>
+        <a href="/models" class="btn btn--outline btn--lg">浏览模型</a>
+      </div>
+      <p class="notfound__alt">
+        Looking for the English site? <a href="/en">Go to tokenfleet.cn/en</a>.
+      </p>
+    </div>
+  </main>
+  <Footer locale={locale} />
+</Base>
+
+<style>
+  .notfound {
+    display: flex;
+    align-items: center;
+    min-height: 60vh;
+    padding-block: clamp(72px, 12vw, 140px);
+    background: linear-gradient(
+      180deg,
+      var(--color-canvas-soft) 0%,
+      var(--color-canvas) 100%
+    );
+  }
+
+  .notfound__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 560px;
+  }
+
+  .notfound__code {
+    color: var(--color-primary);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+  }
+
+  .notfound__title {
+    font-size: var(--type-display-xl-size);
+    line-height: var(--type-display-xl-line);
+    letter-spacing: var(--type-display-xl-track);
+    font-weight: var(--weight-thin);
+    color: var(--color-ink);
+  }
+
+  .notfound__body {
+    color: var(--color-ink-secondary);
+    font-size: var(--type-body-lg-size);
+    line-height: 1.6;
+    max-width: 46ch;
+  }
+
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .notfound__alt {
+    margin-top: 12px;
+    color: var(--color-ink-mute);
+    font-size: 14px;
+  }
+
+  .notfound__alt a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

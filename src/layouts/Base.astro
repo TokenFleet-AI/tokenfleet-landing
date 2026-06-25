@@ -7,24 +7,36 @@ interface Props {
   locale?: 'zh' | 'en';
   alternateZh?: string;
   alternateEn?: string;
+  noindex?: boolean;
+  jsonLd?: object | object[];
 }
 
 import { i18n, ogLocale } from '../i18n.ts';
+import { organizationSchema, websiteSchema } from '../seo/schema.ts';
 
 const {
   locale = 'zh',
   title = i18n[locale].seo.homeTitle,
   description = i18n[locale].seo.homeDescription,
-  ogImage,
+  ogImage = '/og-image.png',
   canonical = Astro.url.href,
   alternateZh,
   alternateEn,
+  noindex = false,
+  jsonLd,
 } = Astro.props as Props;
 
 const t = i18n[locale];
-const ogImageUrl = ogImage
-  ? new URL(ogImage, Astro.site).toString()
-  : undefined;
+const ogImageUrl = new URL(ogImage, Astro.site).toString();
+
+// 站点级结构化数据始终输出；页面可经 `jsonLd` prop 追加自有 schema
+// （供子任务 B 注入 Product / ItemList）。
+const siteSchemas = [
+  organizationSchema(Astro.site!),
+  websiteSchema(Astro.site!),
+];
+const pageSchemas = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const jsonLdBlocks = [...siteSchemas, ...pageSchemas];
 
 import '../styles/global.css';
 import '../styles/buttons.css';
@@ -45,12 +57,18 @@ import '../styles/tailwind.css';
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     {
       alternateZh && (
         <link rel="alternate" hreflang="zh-CN" href={alternateZh} />
       )
     }
     {alternateEn && <link rel="alternate" hreflang="en" href={alternateEn} />}
+    {
+      alternateZh && (
+        <link rel="alternate" hreflang="x-default" href={alternateZh} />
+      )
+    }
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -59,15 +77,24 @@ import '../styles/tailwind.css';
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content={ogLocale(locale)} />
-    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="TokenFleet" />
+    <meta property="og:image" content={ogImageUrl} />
 
-    <meta
-      name="twitter:card"
-      content={ogImageUrl ? 'summary_large_image' : 'summary'}
-    />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {
+      jsonLdBlocks.map((schema) => (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(schema)}
+        />
+      ))
+    }
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

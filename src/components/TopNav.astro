@@ -12,7 +12,7 @@
 
 import Wordmark from './Wordmark.astro';
 import { i18n, localePath, otherLocale, type Locale } from '../i18n.ts';
-import { DASHBOARD_URL, SIGN_IN_URL } from '../site-links.ts';
+import { DASHBOARD_URL, DOCS_URL, SIGN_IN_URL } from '../site-links.ts';
 
 interface Props {
   locale?: Locale;
@@ -25,7 +25,7 @@ const altLocale = otherLocale(locale);
 const navLinks = [
   { href: localePath(locale, '/models'), label: t.nav.links.models },
   {
-    href: 'https://docs.tokenfleet.cn',
+    href: DOCS_URL,
     label: t.nav.links.docs,
     external: true,
   },

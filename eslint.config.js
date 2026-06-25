@@ -31,7 +31,7 @@ export default [
   ...tseslint.configs.recommended,
   ...astro.configs['flat/recommended'],
   {
-    files: ['**/*.{js,jsx,ts,tsx,astro}'],
+    files: ['**/*.{js,mjs,jsx,ts,tsx,astro}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
