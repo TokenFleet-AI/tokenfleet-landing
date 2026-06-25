@@ -17,6 +17,19 @@ function abs(site: URL | string, path: string): string {
   return new URL(path, site).toString();
 }
 
+/** 母公司法人主体（与 footer `companyName` 一致），用于 schema `legalName`。 */
+const LEGAL_NAME = '深圳市新云计算科技有限公司';
+
+/** 企业 / 销售联系邮箱（与 enterprise 文案 note 一致）。 */
+const SALES_EMAIL = 'zhangyue@nyuncloud.com';
+
+/**
+ * 一句话实体定义，给 AI 引擎可引用的 Organization 描述。措辞与 `/llms.txt` 摘要、
+ * 站内 hero / footer 表述同源，全部为可核对事实，不含营销形容词。
+ */
+const ORG_DESCRIPTION =
+  'TokenFleet 是一站式 AI 模型 API 网关，把 DeepSeek、Moonshot、MiniMax、智谱 等厂商的生产级 LLM、图像、视频、音频模型聚合到同一个 OpenAI 兼容 endpoint，一个 API key、一份人民币对公发票，国内直连。';
+
 /** schema.org Organization — 站点背后的实体。 */
 export function organizationSchema(site: URL | string) {
   const home = new URL(site).toString();
@@ -24,8 +37,15 @@ export function organizationSchema(site: URL | string) {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: ORG_NAME,
+    legalName: LEGAL_NAME,
+    description: ORG_DESCRIPTION,
     url: home,
     logo: abs(site, '/xy-logo.png'),
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'sales',
+      email: SALES_EMAIL,
+    },
     sameAs: [
       DOCS_URL,
       'https://blog.tokenfleet.cn',
