@@ -16,12 +16,12 @@
 import ModelCard from './ModelCard.astro';
 import ModelDialog from './ModelDialog.astro';
 import {
-  loadModels,
   usedVendors,
   vendorSlug,
   vendorDisplayName,
   totalModelCount,
 } from '../data/pricing.ts';
+import { modelsWithSlug } from '../data/model-slug.ts';
 import { i18n, type Locale } from '../i18n.ts';
 
 interface Props {
@@ -30,7 +30,7 @@ interface Props {
 
 const { locale = 'zh' } = Astro.props as Props;
 const t = i18n[locale];
-const models = loadModels();
+const models = modelsWithSlug();
 const vendors = usedVendors();
 const total = totalModelCount();
 
@@ -525,12 +525,18 @@ const modalities = [
       dialog?.close();
     }
 
+    // Cards are real <a href="/models/<slug>"> links (crawlable, works without
+    // JS). When JS + pre-rendered detail are present, intercept the click and
+    // open the dialog instead — progressive enhancement.
     grid.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      const btn = target.closest<HTMLElement>('[data-model]');
-      if (btn) {
-        const name = btn.dataset.model;
-        if (name) openModel(name);
+      const link = target.closest<HTMLElement>('[data-model]');
+      if (link) {
+        const name = link.dataset.model;
+        if (name && detailMap[name]) {
+          e.preventDefault();
+          openModel(name);
+        }
       }
     });
 

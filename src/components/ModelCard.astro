@@ -10,23 +10,24 @@
  * vanilla JS can filter (hidden attribute) and sort (style.order) without
  * touching markup.
  */
-import type { Model } from '../data/pricing.ts';
 import {
   priceLabel,
   modalityLabel,
   vendorSlug,
   vendorDisplayName,
 } from '../data/pricing.ts';
+import { modelDetailPath, type ModelWithSlug } from '../data/model-slug.ts';
 import { i18n, type Locale } from '../i18n.ts';
 
 interface Props {
-  model: Model;
+  model: ModelWithSlug;
   locale?: Locale;
 }
 const { model, locale = 'zh' } = Astro.props as Props;
 const t = i18n[locale];
 
 const vSlug = vendorSlug(model.vendor);
+const detailHref = modelDetailPath(model.slug, locale);
 const price = priceLabel(model, locale);
 const vendorName = vendorDisplayName(model.vendor, locale);
 const showTags =
@@ -44,9 +45,9 @@ const sortOutput = model.outputPriceUsd;
   data-input-price={sortInput}
   data-output-price={sortOutput}
 >
-  <button
-    type="button"
+  <a
     class="modelcard__open"
+    href={detailHref}
     data-model={model.model_name}
     aria-label={t.models.cardAria(model.model_name)}
   >
@@ -83,7 +84,7 @@ const sortOutput = model.outputPriceUsd;
       {price}
       <span class="modelcard__more" aria-hidden="true">→</span>
     </p>
-  </button>
+  </a>
 </li>
 
 <style>
@@ -104,6 +105,7 @@ const sortOutput = model.outputPriceUsd;
     overflow: hidden;
     isolation: isolate;
     text-align: left;
+    text-decoration: none;
     background:
       linear-gradient(
         135deg,

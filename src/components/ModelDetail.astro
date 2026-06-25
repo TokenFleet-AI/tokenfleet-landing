@@ -1,0 +1,417 @@
+---
+/**
+ * ModelDetail.astro — 模型详情页主体（zh / en 共享）。
+ *
+ * 与 ModelDialog 的 renderDetail 同源数据（简介 / 价格分解 / 规格 / endpoint），
+ * 但渲染为可索引的语义化 HTML：单 `<h1>`=模型名、面包屑内链、价格表、规格表、
+ * endpoint 列表、控制台 CTA。被 `/models/[slug]` 与 `/en/models/[slug]` 复用。
+ */
+import type { ModelWithSlug } from '../data/model-slug.ts';
+import {
+  priceBreakdown,
+  modalityLabel,
+  vendorDisplayName,
+  fmtUsd,
+  endpointDefs,
+} from '../data/pricing.ts';
+import { metaOf } from '../data/model-meta.ts';
+import { i18n, localePath, type Locale } from '../i18n.ts';
+import { DASHBOARD_URL } from '../site-links.ts';
+
+interface Props {
+  model: ModelWithSlug;
+  locale?: Locale;
+}
+
+const { model, locale = 'zh' } = Astro.props as Props;
+const t = i18n[locale];
+
+const p = priceBreakdown(model);
+const meta = metaOf(model.model_name);
+const vendorName = vendorDisplayName(model.vendor, locale);
+const modality = modalityLabel(model.modality, locale);
+
+const showTag =
+  Boolean(model.tags) && (locale === 'zh' || !/[㐀-鿿]/.test(model.tags ?? ''));
+
+const canUseDescription =
+  Boolean(model.description) &&
+  (locale === 'zh' || !/[㐀-鿿]/.test(model.description ?? ''));
+
+const contextLabel = meta?.contextK
+  ? meta.contextK >= 1000
+    ? `${meta.contextK / 1000}M`
+    : `${meta.contextK}K`
+  : null;
+
+const modelsHref = localePath(locale, '/models');
+const homeHref = localePath(locale, '/');
+---
+
+<article class="modeldetail">
+  <div class="container modeldetail__inner">
+    <nav class="modeldetail__crumbs" aria-label="breadcrumb">
+      <a href={homeHref}>{t.models.breadcrumbHome}</a>
+      <span aria-hidden="true">›</span>
+      <a href={modelsHref}>{t.nav.links.models}</a>
+      <span aria-hidden="true">›</span>
+      <span class="mono" aria-current="page">{model.model_name}</span>
+    </nav>
+
+    <header class="modeldetail__head">
+      <span class="modeldetail__logo">
+        <img
+          src={model.iconUrl}
+          alt={`${vendorName} logo`}
+          width="28"
+          height="28"
+          onerror="this.style.display='none'"
+        />
+      </span>
+      <div class="modeldetail__heading">
+        <span class="modeldetail__vendor mono">{vendorName}</span>
+        <h1 class="modeldetail__title mono">{model.model_name}</h1>
+        <span class="modeldetail__modality mono">
+          {modality}{showTag ? ` · ${model.tags}` : ''}
+        </span>
+      </div>
+    </header>
+
+    <div class="modeldetail__grid">
+      <section class="modeldetail__section">
+        <h2 class="eyebrow eyebrow--mute">{t.models.detailIntro}</h2>
+        {
+          canUseDescription ? (
+            <p class="modeldetail__desc">{model.description}</p>
+          ) : (
+            <p class="modeldetail__desc modeldetail__desc--mute">
+              {t.models.noDescription}
+            </p>
+          )
+        }
+        {
+          meta?.docs && (
+            <a
+              class="link modeldetail__docs"
+              href={meta.docs}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t.models.docs}
+            </a>
+          )
+        }
+      </section>
+
+      <section class="modeldetail__section">
+        <h2 class="eyebrow eyebrow--mute">{t.models.price}</h2>
+        {
+          p.kind === 'call' ? (
+            <table class="price-table mono">
+              <tbody>
+                <tr>
+                  <th>{t.models.perCall}</th>
+                  <td>
+                    {fmtUsd(p.inputUsd)} / {t.models.pricePerCall}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          ) : p.tiers ? (
+            <>
+              <table class="price-table mono">
+                <thead>
+                  <tr>
+                    <th>{t.models.range}</th>
+                    <th>{t.models.inputPerM}</th>
+                    <th>{t.models.outputPerM}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {p.tiers.map((tier) => (
+                    <tr>
+                      <td>{tier.label}</td>
+                      <td>{fmtUsd(tier.inputUsd)}</td>
+                      <td>{fmtUsd(tier.outputUsd)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {p.cachedInputUsd !== undefined && (
+                <p class="price-note mono">
+                  {t.models.cachedInput} · {fmtUsd(p.cachedInputUsd)} / 1M
+                  tokens
+                </p>
+              )}
+            </>
+          ) : (
+            <table class="price-table mono">
+              <tbody>
+                <tr>
+                  <th>{t.models.input}</th>
+                  <td>{fmtUsd(p.inputUsd)} / 1M tokens</td>
+                </tr>
+                <tr>
+                  <th>{t.models.output}</th>
+                  <td>{fmtUsd(p.outputUsd!)} / 1M tokens</td>
+                </tr>
+                {p.cachedInputUsd !== undefined && (
+                  <tr>
+                    <th>{t.models.cachedInput}</th>
+                    <td>{fmtUsd(p.cachedInputUsd)} / 1M tokens</td>
+                  </tr>
+                )}
+                {p.createCacheUsd !== undefined && (
+                  <tr>
+                    <th>{t.models.cacheWrite}</th>
+                    <td>{fmtUsd(p.createCacheUsd)} / 1M tokens</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )
+        }
+      </section>
+
+      <section class="modeldetail__section">
+        <h2 class="eyebrow eyebrow--mute">{t.models.specs}</h2>
+        <dl class="modeldetail__specs">
+          {
+            contextLabel && (
+              <>
+                <dt>{t.models.context}</dt>
+                <dd class="mono">{contextLabel} tokens</dd>
+              </>
+            )
+          }
+          {
+            meta?.maxOutputK && (
+              <>
+                <dt>{t.models.maxOutput}</dt>
+                <dd class="mono">{meta.maxOutputK}K tokens</dd>
+              </>
+            )
+          }
+          <dt>{t.models.billing}</dt>
+          <dd class="mono">
+            {p.kind === 'token' ? t.models.billingToken : t.models.billingCall}
+          </dd>
+          <dt>{t.models.groups}</dt>
+          <dd class="mono">{model.enable_groups.join(' · ')}</dd>
+        </dl>
+      </section>
+
+      <section class="modeldetail__section">
+        <h2 class="eyebrow eyebrow--mute">{t.models.endpoints}</h2>
+        <ul class="endpoint-list">
+          {
+            model.supported_endpoint_types.map((e) => (
+              <li>
+                <span class="endpoint__name mono">{e}</span>
+                <span class="endpoint__path mono">
+                  {endpointDefs[e]?.path ?? ''}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+
+    <footer class="modeldetail__foot">
+      <a class="btn btn--primary btn--lg" href={DASHBOARD_URL} rel="noopener">
+        {t.models.console}
+      </a>
+      <a class="btn btn--outline btn--lg" href={modelsHref}>
+        {t.models.backToModels}
+      </a>
+    </footer>
+  </div>
+</article>
+
+<style>
+  .modeldetail {
+    padding-block: clamp(28px, 5vw, 56px) clamp(48px, 8vw, 88px);
+    background: var(--color-canvas);
+  }
+
+  .modeldetail__inner {
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .modeldetail__crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+    color: var(--color-ink-mute);
+  }
+  .modeldetail__crumbs a {
+    color: var(--color-ink-secondary);
+    transition: color var(--motion-base) var(--ease-out-quart);
+  }
+  .modeldetail__crumbs a:hover {
+    color: var(--color-primary);
+  }
+
+  .modeldetail__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .modeldetail__logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 999px;
+    background: var(--color-canvas-soft);
+    border: 1px solid var(--color-hairline);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .modeldetail__logo img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+  .modeldetail__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .modeldetail__vendor {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .modeldetail__title {
+    font-size: clamp(24px, 4vw, 34px);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    word-break: break-all;
+    line-height: 1.15;
+  }
+  .modeldetail__modality {
+    font-size: 12px;
+    color: var(--color-ink-secondary);
+    letter-spacing: 0.03em;
+  }
+
+  .modeldetail__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .modeldetail__section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modeldetail__desc {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--color-ink-secondary);
+    white-space: pre-line;
+  }
+  .modeldetail__desc--mute {
+    color: var(--color-ink-mute);
+    font-style: italic;
+  }
+  .modeldetail__docs {
+    align-self: flex-start;
+    font-size: 13px;
+  }
+
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .price-table th,
+  .price-table td {
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--color-hairline);
+    text-align: left;
+    color: var(--color-ink-secondary);
+  }
+  .price-table thead th {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--color-hairline-strong);
+  }
+  .price-table tbody th {
+    color: var(--color-ink-mute);
+    font-weight: var(--weight-regular);
+    width: 42%;
+  }
+  .price-table tbody tr:last-child th,
+  .price-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .price-note {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+  }
+
+  .modeldetail__specs {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 10px 20px;
+    font-size: 13.5px;
+  }
+  .modeldetail__specs dt {
+    color: var(--color-ink-mute);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-top: 2px;
+  }
+  .modeldetail__specs dd {
+    margin: 0;
+    color: var(--color-ink);
+  }
+
+  .endpoint-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .endpoint-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-size: 13px;
+  }
+  .endpoint__name {
+    padding: 2px 8px;
+    border-radius: var(--radius-pill);
+    background: var(--color-primary-bg-subdued);
+    color: var(--color-primary-deep);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .endpoint__path {
+    color: var(--color-ink-mute);
+    word-break: break-all;
+  }
+
+  .modeldetail__foot {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-hairline);
+  }
+</style>

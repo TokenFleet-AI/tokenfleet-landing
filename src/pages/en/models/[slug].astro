@@ -1,0 +1,58 @@
+---
+/**
+ * /en/models/<slug> — 模型详情程序化 SEO 页（英文）。
+ *
+ * 与 zh 路由同构，仅 locale 与 import 深度不同；canonical 自指 `/en/models/<slug>`，
+ * x-default 经 Base 指向中文 URL。
+ */
+import Base from '../../../layouts/Base.astro';
+import TopNav from '../../../components/TopNav.astro';
+import Footer from '../../../components/Footer.astro';
+import ModelDetail from '../../../components/ModelDetail.astro';
+import {
+  modelsWithSlug,
+  type ModelWithSlug,
+} from '../../../data/model-slug.ts';
+import { priceLabel, vendorDisplayName } from '../../../data/pricing.ts';
+import { modelSchema } from '../../../seo/model-schema.ts';
+import { i18n } from '../../../i18n.ts';
+
+export function getStaticPaths() {
+  return modelsWithSlug().map((model) => ({
+    params: { slug: model.slug },
+    props: { model },
+  }));
+}
+
+const locale = 'en';
+const { model } = Astro.props as { model: ModelWithSlug };
+const t = i18n[locale];
+
+const vendorName = vendorDisplayName(model.vendor, locale);
+const price = priceLabel(model, locale);
+const canonical = new URL(`/en/models/${model.slug}`, Astro.site).toString();
+const alternateZh = new URL(`/models/${model.slug}`, Astro.site).toString();
+
+const title = t.models.detailTitle(model.model_name, vendorName);
+const description = t.models.detailDescription(
+  model.model_name,
+  vendorName,
+  price
+);
+---
+
+<Base
+  locale={locale}
+  title={title}
+  description={description}
+  canonical={canonical}
+  alternateZh={alternateZh}
+  alternateEn={canonical}
+  jsonLd={modelSchema(model, locale, canonical)}
+>
+  <TopNav locale={locale} currentPath="/models" />
+  <main id="main">
+    <ModelDetail model={model} locale={locale} />
+  </main>
+  <Footer locale={locale} />
+</Base>

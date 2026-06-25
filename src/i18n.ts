@@ -210,6 +210,12 @@ export const i18n = {
       copyId: '复制 model id',
       copied: '已复制',
       console: '去控制台调用',
+      detailTitle: (model: string, vendor: string) =>
+        `${model} 价格与 API 接入 · ${vendor} · TokenFleet`,
+      detailDescription: (model: string, vendor: string, price: string) =>
+        `通过 TokenFleet 统一 API 调用 ${vendor} 的 ${model}：${price}。一个 API key，OpenAI SDK 兼容，国内直连，查看上下文窗口、计费方式与完整价格分解。`,
+      breadcrumbHome: '首页',
+      backToModels: '返回模型目录',
     },
     footer: {
       tagline:
@@ -452,6 +458,12 @@ export const i18n = {
       copyId: 'Copy model id',
       copied: 'Copied',
       console: 'Open console',
+      detailTitle: (model: string, vendor: string) =>
+        `${model} pricing & API access · ${vendor} · TokenFleet`,
+      detailDescription: (model: string, vendor: string, price: string) =>
+        `Call ${vendor}'s ${model} through the TokenFleet unified API: ${price}. One API key, OpenAI SDK compatible — see context window, billing and full price breakdown.`,
+      breadcrumbHome: 'Home',
+      backToModels: 'Back to models',
     },
     footer: {
       tagline:

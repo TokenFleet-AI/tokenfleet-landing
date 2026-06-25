@@ -8,6 +8,8 @@
  * 子任务 B（模型详情页）通过 `seoPages()` 追加 `/models/[id]` 簇，
  * 实现「一处登记，sitemap 自动收录」。
  */
+import { modelsWithSlug } from '../data/model-slug.ts';
+
 export interface SeoPage {
   /** 中文（默认）URL 路径，也是该簇 hreflang="x-default" 的目标。 */
   zh: string;
@@ -23,8 +25,13 @@ export const staticSeoPages: SeoPage[] = [
 
 /**
  * 站点全部可索引页面簇。sitemap endpoint 调用此函数。
- * 子任务 B 在此 concat 动态模型详情页。
+ * = 静态页 + 每个模型的中英文详情页（`/models/<slug>`），实现「一处登记，
+ * sitemap 自动收录」——新增模型无需改 sitemap。
  */
 export function seoPages(): SeoPage[] {
-  return [...staticSeoPages];
+  const modelPages: SeoPage[] = modelsWithSlug().map((m) => ({
+    zh: `/models/${m.slug}`,
+    en: `/en/models/${m.slug}`,
+  }));
+  return [...staticSeoPages, ...modelPages];
 }
