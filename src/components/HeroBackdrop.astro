@@ -1,43 +1,10 @@
 ---
-/**
- * HeroBackdrop.astro — light purple terminal hero background.
- *
- * Renders a white-purple fallback for SSR / WebGL-disabled clients, then
- * hydrates the FaultyTerminal WebGL canvas on top via client:only="react".
- *
- * Replaces MeshBackdrop on the home hero only; mesh remains the universal
- * marketing-hero default elsewhere (see DESIGN.md §"do's and don'ts").
- */
-
-import FaultyTerminalIsland from './react/FaultyTerminalIsland.jsx';
+/** Static light-purple hero background. */
 ---
 
 <div class="hero-bg" aria-hidden="true">
-  <div class="hero-bg__fallback"></div>
-
-  <FaultyTerminalIsland
-    client:only="react"
-    scale={3}
-    gridMul={[2, 1]}
-    digitSize={0.9}
-    timeScale={0.58}
-    pause={false}
-    scanlineIntensity={0.48}
-    glitchAmount={0.22}
-    flickerAmount={0.16}
-    noiseAmp={0.62}
-    chromaticAberration={0}
-    dither={0}
-    curvature={0}
-    tint="#5b42ff"
-    backgroundColor="#f8f6ff"
-    mouseReact={true}
-    mouseStrength={0.32}
-    pageLoadAnimation={false}
-    brightness={0.58}
-    dpr={1}
-  />
-
+  <div class="hero-bg__field"></div>
+  <div class="hero-bg__grid"></div>
   <div class="hero-bg__vignette"></div>
 </div>
 
@@ -52,11 +19,14 @@ import FaultyTerminalIsland from './react/FaultyTerminalIsland.jsx';
     pointer-events: none;
   }
 
-  /* Static fallback shown before React hydrates / when WebGL is unavailable.
-     Mirrors the light-with-purple-energy tone the canvas will paint over. */
-  .hero-bg__fallback {
+  .hero-bg__field,
+  .hero-bg__grid,
+  .hero-bg__vignette {
     position: absolute;
     inset: 0;
+  }
+
+  .hero-bg__field {
     background:
       radial-gradient(
         ellipse at 18% 24%,
@@ -72,44 +42,24 @@ import FaultyTerminalIsland from './react/FaultyTerminalIsland.jsx';
         ellipse at 52% 8%,
         rgba(255, 255, 255, 0.82),
         transparent 52%
-      ),
-      #f8f6ff;
-    pointer-events: none;
+      );
   }
 
-  /* Soft edge wash so the canvas doesn't hard-cut against the centered content. */
+  .hero-bg__grid {
+    opacity: 0.18;
+    background-image:
+      linear-gradient(rgba(83, 58, 253, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(83, 58, 253, 0.16) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: radial-gradient(ellipse at 50% 45%, #000 0%, transparent 72%);
+  }
+
   .hero-bg__vignette {
-    position: absolute;
-    inset: 0;
     background: radial-gradient(
       ellipse at 50% 60%,
       rgba(255, 255, 255, 0) 34%,
       rgba(255, 255, 255, 0.18) 78%,
       rgba(255, 255, 255, 0.42) 100%
     );
-    pointer-events: none;
-  }
-
-  .hero-bg :global(canvas) {
-    display: block;
-    opacity: 0.94;
-    animation: hero-bg-canvas-in 420ms ease-out both;
-    will-change: opacity;
-  }
-
-  @keyframes hero-bg-canvas-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 0.94;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bg :global(canvas) {
-      animation: none;
-      opacity: 0.86;
-    }
   }
 </style>

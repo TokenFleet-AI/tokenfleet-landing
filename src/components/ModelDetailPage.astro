@@ -1,0 +1,69 @@
+---
+import Base from '../layouts/Base.astro';
+import TopNav from './TopNav.astro';
+import Footer from './Footer.astro';
+import ModelDetail from './ModelDetail.astro';
+import { type ModelWithSlug } from '../data/model-slug.ts';
+import { priceLabel, vendorDisplayName } from '../data/pricing.ts';
+import { modelSchema } from '../seo/model-schema.ts';
+import { breadcrumbSchema } from '../seo/breadcrumb-schema.ts';
+import { faqPageSchema } from '../seo/faq-schema.ts';
+import { modelFaq } from '../seo/model-faq.ts';
+import { i18n, localePath, type Locale } from '../i18n.ts';
+
+interface Props {
+  locale: Locale;
+  model: ModelWithSlug;
+}
+
+const { locale, model } = Astro.props as Props;
+const t = i18n[locale];
+
+const vendorName = vendorDisplayName(model.vendor, locale);
+const price = priceLabel(model, locale);
+const canonical = new URL(
+  localePath(locale, `/models/${model.slug}`),
+  Astro.site
+).toString();
+const alternateZh = new URL(`/models/${model.slug}`, Astro.site).toString();
+const alternateEn = new URL(`/en/models/${model.slug}`, Astro.site).toString();
+
+const title = t.models.detailTitle(model.model_name, vendorName);
+const description = t.models.detailDescription(
+  model.model_name,
+  vendorName,
+  price
+);
+
+const jsonLd = [
+  modelSchema(model, locale, canonical),
+  breadcrumbSchema([
+    {
+      name: t.models.breadcrumbHome,
+      url: new URL(localePath(locale, '/'), Astro.site).toString(),
+    },
+    {
+      name: t.nav.links.models,
+      url: new URL(localePath(locale, '/models'), Astro.site).toString(),
+    },
+    { name: model.model_name, url: canonical },
+  ]),
+  faqPageSchema(modelFaq(model, locale)),
+];
+---
+
+<Base
+  locale={locale}
+  title={title}
+  description={description}
+  canonical={canonical}
+  alternateZh={alternateZh}
+  alternateEn={alternateEn}
+  jsonLd={jsonLd}
+>
+  <TopNav locale={locale} currentPath="/models" />
+  <main id="main">
+    <ModelDetail model={model} locale={locale} />
+  </main>
+  <Footer locale={locale} />
+</Base>

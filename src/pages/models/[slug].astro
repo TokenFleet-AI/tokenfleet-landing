@@ -1,21 +1,6 @@
 ---
-/**
- * /models/<slug> — 模型详情程序化 SEO 页（中文）。
- *
- * `getStaticPaths` 从 `modelsWithSlug()` 为每个模型生成一页。canonical 自指，
- * hreflang zh-CN/en/x-default 经 Base 输出，注入 SoftwareApplication JSON-LD。
- */
-import Base from '../../layouts/Base.astro';
-import TopNav from '../../components/TopNav.astro';
-import Footer from '../../components/Footer.astro';
-import ModelDetail from '../../components/ModelDetail.astro';
+import ModelDetailPage from '../../components/ModelDetailPage.astro';
 import { modelsWithSlug, type ModelWithSlug } from '../../data/model-slug.ts';
-import { priceLabel, vendorDisplayName } from '../../data/pricing.ts';
-import { modelSchema } from '../../seo/model-schema.ts';
-import { breadcrumbSchema } from '../../seo/breadcrumb-schema.ts';
-import { faqPageSchema } from '../../seo/faq-schema.ts';
-import { modelFaq } from '../../seo/model-faq.ts';
-import { i18n, localePath } from '../../i18n.ts';
 
 export function getStaticPaths() {
   return modelsWithSlug().map((model) => ({
@@ -24,53 +9,7 @@ export function getStaticPaths() {
   }));
 }
 
-const locale = 'zh';
 const { model } = Astro.props as { model: ModelWithSlug };
-const t = i18n[locale];
-
-const vendorName = vendorDisplayName(model.vendor, locale);
-const price = priceLabel(model, locale);
-const canonical = new URL(`/models/${model.slug}`, Astro.site).toString();
-const alternateEn = new URL(`/en/models/${model.slug}`, Astro.site).toString();
-
-const title = t.models.detailTitle(model.model_name, vendorName);
-const description = t.models.detailDescription(
-  model.model_name,
-  vendorName,
-  price
-);
-
-// 注入三段 schema：SoftwareApplication（实体）+ BreadcrumbList（层级，对齐可见面包屑）
-// + FAQPage（per-model 问答，与 ModelDetail 可见 FAQ 同源）。
-const jsonLd = [
-  modelSchema(model, locale, canonical),
-  breadcrumbSchema([
-    {
-      name: t.models.breadcrumbHome,
-      url: new URL(localePath(locale, '/'), Astro.site).toString(),
-    },
-    {
-      name: t.nav.links.models,
-      url: new URL(localePath(locale, '/models'), Astro.site).toString(),
-    },
-    { name: model.model_name, url: canonical },
-  ]),
-  faqPageSchema(modelFaq(model, locale)),
-];
 ---
 
-<Base
-  locale={locale}
-  title={title}
-  description={description}
-  canonical={canonical}
-  alternateZh={canonical}
-  alternateEn={alternateEn}
-  jsonLd={jsonLd}
->
-  <TopNav locale={locale} currentPath="/models" />
-  <main id="main">
-    <ModelDetail model={model} locale={locale} />
-  </main>
-  <Footer locale={locale} />
-</Base>
+<ModelDetailPage locale="zh" model={model} />

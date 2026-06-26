@@ -1,6 +1,6 @@
 ---
 /**
- * ModelsExplorer.astro — toolbar + cards grid + shared dialog.
+ * ModelsExplorer.astro — toolbar + crawlable cards grid.
  *
  * Interactivity is vanilla JS in a single <script>:
  *   - filter:  toggle [hidden] on cards based on vendor/modality/search
@@ -9,12 +9,8 @@
  *   - URL sync: state ↔ URLSearchParams (?vendor=&modality=&sort=&q=)
  *               so /models?modality=image links from elsewhere land in the
  *               filtered state.
- *   - dialog:  card button [data-model] click → look up pre-rendered HTML in
- *              the <script id="model-detail-data"> JSON blob → swap innerHTML
- *              → dialog.showModal(). Close on Esc, backdrop click, ×.
  */
 import ModelCard from './ModelCard.astro';
-import ModelDialog from './ModelDialog.astro';
 import {
   usedVendors,
   vendorSlug,
@@ -49,7 +45,6 @@ const modalities = [
       class="explorer__toolbar"
       data-toolbar
       data-counter-template={t.models.counter('__shown__', total)}
-      data-copied-label={t.models.copied}
     >
       <div
         class="explorer__chips"
@@ -142,8 +137,6 @@ const modalities = [
     </ol>
   </div>
 </section>
-
-<ModelDialog locale={locale} />
 
 <style>
   .explorer {
@@ -495,90 +488,5 @@ const modalities = [
     });
 
     render();
-
-    // ── Dialog wiring ───────────────────────────────────────────────────
-    const dialog = document.getElementById(
-      'model-dialog'
-    ) as HTMLDialogElement | null;
-    const dialogInner = document.querySelector<HTMLElement>(
-      '[data-dialog-inner]'
-    );
-    const dataScript = document.getElementById('model-detail-data');
-    const detailMap: Record<string, string> = dataScript
-      ? JSON.parse(dataScript.textContent || '{}')
-      : {};
-
-    function openModel(name: string) {
-      if (!dialog || !dialogInner) return;
-      const html = detailMap[name];
-      if (!html) return;
-      dialogInner.innerHTML = html;
-      dialog.showModal();
-      // give the dialog body focus for keyboard scrolling
-      const focusable = dialog.querySelector<HTMLElement>(
-        '[data-dialog-close]'
-      );
-      focusable?.focus();
-    }
-
-    function closeDialog() {
-      dialog?.close();
-    }
-
-    // Cards are real <a href="/models/<slug>"> links (crawlable, works without
-    // JS). When JS + pre-rendered detail are present, intercept the click and
-    // open the dialog instead — progressive enhancement.
-    grid.addEventListener('click', (e) => {
-      const target = e.target as HTMLElement;
-      const link = target.closest<HTMLElement>('[data-model]');
-      if (link) {
-        const name = link.dataset.model;
-        if (name && detailMap[name]) {
-          e.preventDefault();
-          openModel(name);
-        }
-      }
-    });
-
-    if (dialog) {
-      // backdrop click closes
-      dialog.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        if (target.matches('[data-dialog-close]')) {
-          closeDialog();
-          return;
-        }
-        // click on dialog element itself (not its child content) = backdrop
-        if (target === dialog) {
-          const rect = dialog.getBoundingClientRect();
-          const inside =
-            e.clientX >= rect.left &&
-            e.clientX <= rect.right &&
-            e.clientY >= rect.top &&
-            e.clientY <= rect.bottom;
-          if (!inside) closeDialog();
-        }
-      });
-
-      // copy id button
-      dialog.addEventListener('click', (e) => {
-        const target = e.target as HTMLElement;
-        const copyBtn = target.closest<HTMLElement>('[data-copy-id]');
-        if (copyBtn) {
-          const id = copyBtn.dataset.id || '';
-          navigator.clipboard?.writeText(id).then(() => {
-            const original = copyBtn.textContent;
-            copyBtn.textContent = `${toolbar.dataset.copiedLabel || 'Copied'} ✓`;
-            window.setTimeout(() => {
-              copyBtn.textContent = original;
-            }, 1400);
-          });
-        }
-      });
-    }
-
-    // Open dialog via ?open=<model_name> deep link.
-    const initialOpen = new URLSearchParams(window.location.search).get('open');
-    if (initialOpen) openModel(initialOpen);
   }
 </script>

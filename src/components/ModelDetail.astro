@@ -2,8 +2,7 @@
 /**
  * ModelDetail.astro — 模型详情页主体（zh / en 共享）。
  *
- * 与 ModelDialog 的 renderDetail 同源数据（简介 / 价格分解 / 规格 / endpoint），
- * 但渲染为可索引的语义化 HTML：单 `<h1>`=模型名、面包屑内链、价格表、规格表、
+ * 渲染可索引的语义化 HTML：单 `<h1>`=模型名、面包屑内链、价格表、规格表、
  * endpoint 列表、控制台 CTA。被 `/models/[slug]` 与 `/en/models/[slug]` 复用。
  */
 import type { ModelWithSlug } from '../data/model-slug.ts';

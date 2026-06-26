@@ -1,0 +1,132 @@
+---
+import Base from '../layouts/Base.astro';
+import TopNav from './TopNav.astro';
+import Footer from './Footer.astro';
+import ModelsExplorer from './ModelsExplorer.astro';
+import { totalModelCount, usedVendors } from '../data/pricing.ts';
+import { i18n, localePath, type Locale } from '../i18n.ts';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props as Props;
+const t = i18n[locale];
+const total = totalModelCount();
+const vendorCount = usedVendors().length;
+const heroTitle = t.models.title(total).split('\n');
+---
+
+<Base
+  locale={locale}
+  title={t.seo.modelsTitle(total)}
+  description={t.seo.modelsDescription(total, vendorCount)}
+  canonical={new URL(localePath(locale, '/models'), Astro.site).toString()}
+  alternateZh={new URL('/models', Astro.site).toString()}
+  alternateEn={new URL('/en/models', Astro.site).toString()}
+>
+  <TopNav locale={locale} currentPath="/models" />
+  <main id="main">
+    <section class="models-hero">
+      <div class="container models-hero__inner">
+        <span class="eyebrow">{t.models.eyebrow}</span>
+        <h1 class="models-hero__title">
+          {
+            heroTitle[0].startsWith(String(total)) ? (
+              <span class="mono models-hero__num">{total}</span>
+            ) : null
+          }
+          {heroTitle[0].replace(String(total), '')}<br />
+          {heroTitle[1]}
+        </h1>
+        <p class="models-hero__body">
+          {t.models.body(vendorCount)}
+        </p>
+        <ul class="models-hero__stats mono">
+          <li>{t.models.statsModels(total)}</li>
+          <li>{t.models.statsVendors(vendorCount)}</li>
+          <li>{t.models.statsEndpoints}</li>
+        </ul>
+      </div>
+    </section>
+
+    <ModelsExplorer locale={locale} />
+  </main>
+  <Footer locale={locale} />
+</Base>
+
+<style>
+  .models-hero {
+    padding-block: clamp(56px, 8vw, 96px) clamp(28px, 4vw, 48px);
+    background: linear-gradient(
+      180deg,
+      var(--color-canvas-soft) 0%,
+      var(--color-canvas) 100%
+    );
+    border-bottom: 1px solid var(--color-hairline);
+  }
+
+  .models-hero__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 720px;
+  }
+
+  .models-hero__title {
+    font-size: var(--type-display-xl-size);
+    line-height: var(--type-display-xl-line);
+    letter-spacing: var(--type-display-xl-track);
+    font-weight: var(--weight-thin);
+    color: var(--color-ink);
+  }
+
+  .models-hero__num {
+    font-weight: var(--weight-medium);
+    color: var(--color-primary);
+    font-size: 0.95em;
+  }
+
+  .models-hero__body {
+    color: var(--color-ink-secondary);
+    font-size: var(--type-body-lg-size);
+    line-height: 1.6;
+    font-weight: var(--weight-regular);
+    max-width: 52ch;
+  }
+
+  .models-hero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 0;
+    margin-top: 14px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-hairline);
+    color: var(--color-ink-mute);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .models-hero__stats li {
+    padding: 4px 16px;
+    border-right: 1px solid var(--color-hairline);
+  }
+  .models-hero__stats li:first-child {
+    padding-left: 0;
+  }
+  .models-hero__stats li:last-child {
+    border-right: 0;
+  }
+
+  .models-hero__stats strong {
+    color: var(--color-ink);
+    font-weight: var(--weight-medium);
+    margin-right: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .models-hero__stats li {
+      padding: 4px 10px;
+    }
+  }
+</style>
