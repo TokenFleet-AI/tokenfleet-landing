@@ -1,95 +1,48 @@
 {
-  "_": "a42d372ccf0b5dd13ecf71203521f9d2",
   "auto_groups": ["default"],
   "data": [
     {
-      "model_name": "deepseek-v3",
-      "description": "DeepSeek-V3 是深度求索（DeepSeek）团队推出的第三代大语言模型，聚焦代码生成、数学推理、专业知识问答三大核心领域，推理能力显著提升，数学、代码评测超越 GPT-4.5；HTML 前端任务的代码可用性更高，视觉效果更美观。",
-      "icon": "DeepSeek.Color",
-      "vendor_id": 5,
+      "model_name": "MiniMax-M2.7",
+      "description": "开启模型的自我迭代 (输出速度约60tps)",
+      "icon": "Minimax.Color",
+      "vendor_id": 6,
       "quota_type": 0,
-      "model_ratio": 0.1428571,
+      "model_ratio": 0.15,
       "model_price": 0,
       "owner_by": "",
       "completion_ratio": 4,
-      "cache_ratio": 1,
-      "enable_groups": ["default", "svip", "vip"],
+      "cache_ratio": 0.2,
+      "enable_groups": ["svip", "test", "vip", "default"],
       "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false,
       "pricing_version": "5a90f2b86c08bd983a9a2e6d66c255f4eaef9c4bc934386d2b6ae84ef0ff1f1f"
     },
     {
-      "model_name": "deepseek-v3.1",
-      "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高",
-      "icon": "DeepSeek.Color",
-      "vendor_id": 5,
+      "model_name": "glm-5.1",
+      "vendor_id": 8,
       "quota_type": 0,
-      "model_ratio": 0.1428571,
+      "model_ratio": 0.42857142855,
       "model_price": 0,
       "owner_by": "",
-      "completion_ratio": 4,
-      "cache_ratio": 1,
-      "enable_groups": ["default", "svip", "vip"],
+      "completion_ratio": 4.000000000233,
+      "cache_ratio": 0.216666333344,
+      "enable_groups": ["svip", "test", "vip", "default"],
       "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
+      "billing_mode": "tiered_expr",
+      "billing_expr": "len < 32000 ? tier(\"standard\", p * 0.86 + c * 3.43 + cr * 0.19) : tier(\"long_context\", p * 1.14 + c * 4 + cr * 0.29)"
     },
     {
-      "model_name": "DeepSeek-V3.2",
-      "description": "DeepSeek-V3.2是引入DeepSeek Sparse Attention（一种稀疏注意力机制）的正式版模型，也是DeepSeek推出的首个将思考融入工具使用的模型，同时支持思考模式与非思考模式的工具调用。\n\n\n\n模型限流与上下文\n\n最大输入长度96K、上下文长度128K、最大输出长度64K\n\nRPM15000、TPM1200000",
-      "icon": "DeepSeek.Color",
-      "vendor_id": 5,
+      "model_name": "glm-5v-turbo",
+      "vendor_id": 8,
       "quota_type": 0,
-      "model_ratio": 0.142857,
+      "model_ratio": 0.6,
       "model_price": 0,
       "owner_by": "",
-      "completion_ratio": 1.5,
-      "cache_ratio": 1,
-      "enable_groups": ["default", "svip", "vip"],
+      "completion_ratio": 3.3333333333333335,
+      "cache_ratio": 0.2,
+      "enable_groups": ["default", "svip", "test", "vip"],
       "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
-    },
-    {
-      "model_name": "DeepSeek-V3.2-A",
-      "description": "DeepSeek-V3.2是引入DeepSeek Sparse Attention（一种稀疏注意力机制）的正式版模型，也是DeepSeek推出的首个将思考融入工具使用的模型，同时支持思考模式与非思考模式的工具调用。\n\n\n模型限流与上下文\n\n最大输入长度96K、上下文长度128K、最大输出长度64K\n\nRPM15000、TPM1200000",
-      "icon": "DeepSeek.Color",
-      "vendor_id": 5,
-      "quota_type": 0,
-      "model_ratio": 0.142857,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 1.5,
-      "cache_ratio": 1,
-      "enable_groups": ["default", "svip", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
-    },
-    {
-      "model_name": "deepseek-v3.2-exp",
-      "description": "引入了DeepSeek Sparse Attention（一种稀疏注意力机制）的实验性质版本，针对长文本的训练和推理效率进行了探索性的优化和验证",
-      "icon": "DeepSeek.Color",
-      "vendor_id": 5,
-      "quota_type": 0,
-      "model_ratio": 0.142857,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 1.5,
-      "cache_ratio": 1,
-      "enable_groups": ["svip", "vip", "default"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
-    },
-    {
-      "model_name": "deepseek-v4-flash",
-      "vendor_id": 5,
-      "quota_type": 0,
-      "model_ratio": 0.0714285714,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 2.0000000007,
-      "enable_groups": ["default", "svip", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false,
-      "icon": "DeepSeek.Color"
+      "billing_mode": "tiered_expr",
+      "billing_expr": "len < 32000 ? tier(\"standard\", p * 0.71 + c * 3.14 + cr * 0.17) : tier(\"long_context\", p * 1 + c * 3.71 + cr * 0.26)"
     },
     {
       "model_name": "kimi-k2.6",
@@ -101,34 +54,101 @@
       "completion_ratio": 4.153846327811,
       "cache_ratio": 0.200000021538,
       "create_cache_ratio": 1.250000053846,
-      "enable_groups": ["default", "svip", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
+      "enable_groups": ["svip", "test", "vip", "default"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "deepseek-v3.1",
+      "description": "DeepSeek-V3.1 是深度求索全新推出的混合推理模型，支持思考与非思考2种推理模式，较 DeepSeek-R1-0528 思考效率更高",
+      "icon": "DeepSeek.Color",
+      "vendor_id": 5,
+      "quota_type": 0,
+      "model_ratio": 0.2857142857,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 3.000000000175,
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "doubao-seedance-2-0-mini-260615",
+      "vendor_id": 13,
+      "quota_type": 0,
+      "model_ratio": 1.64285714285,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 1,
+      "enable_groups": ["default"],
+      "supported_endpoint_types": ["openai"]
     },
     {
       "model_name": "deepseek-v4-pro",
       "vendor_id": 5,
       "quota_type": 0,
-      "model_ratio": 0.85714285715,
+      "model_ratio": 0.857142857,
       "model_price": 0,
       "owner_by": "",
-      "completion_ratio": 2,
-      "enable_groups": ["default", "svip", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false,
-      "icon": "DeepSeek.Color"
+      "completion_ratio": 2.00000000035,
+      "cache_ratio": 0.008333333335,
+      "enable_groups": ["ds-vip", "svip", "default"],
+      "supported_endpoint_types": ["anthropic", "open"]
     },
     {
-      "model_name": "glm-5.1",
+      "model_name": "glm-5.2",
       "vendor_id": 8,
       "quota_type": 0,
-      "model_ratio": 0.42857142855,
+      "model_ratio": 0.5714285715,
       "model_price": 0,
       "owner_by": "",
-      "completion_ratio": 4.000000000233,
-      "enable_groups": ["vip", "default", "svip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
+      "completion_ratio": 3.5,
+      "cache_ratio": 0.250000000219,
+      "enable_groups": ["svip", "test", "vip", "default"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "deepseek-v3.2",
+      "vendor_id": 5,
+      "quota_type": 0,
+      "model_ratio": 0.142857,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 1.5,
+      "enable_groups": ["svip", "test", "vip", "default", "ds-vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "deepseek-v4-flash",
+      "vendor_id": 5,
+      "quota_type": 0,
+      "model_ratio": 0.0714285714,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 2.0000000007,
+      "cache_ratio": 0.020000000308,
+      "enable_groups": ["vip", "default", "ds-vip", "svip", "test"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "doubao-seedance-2-0-260128",
+      "vendor_id": 13,
+      "quota_type": 0,
+      "model_ratio": 3.2857142857,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 1,
+      "enable_groups": ["default"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "doubao-seedance-2-0-fast-260128",
+      "vendor_id": 13,
+      "quota_type": 0,
+      "model_ratio": 2.64285714285,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 1,
+      "enable_groups": ["default"],
+      "supported_endpoint_types": ["openai"]
     },
     {
       "model_name": "kimi-k2.5",
@@ -140,9 +160,20 @@
       "model_price": 0,
       "owner_by": "",
       "completion_ratio": 5.25,
-      "enable_groups": ["vip", "default", "svip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "kimi-k2.7-code",
+      "vendor_id": 7,
+      "quota_type": 0,
+      "model_ratio": 0.4642857143,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 4.153846153672,
+      "cache_ratio": 0.199999999978,
+      "enable_groups": ["default", "svip", "vip"],
+      "supported_endpoint_types": ["openai"]
     },
     {
       "model_name": "MiniMax-M2.5",
@@ -156,42 +187,97 @@
       "owner_by": "",
       "completion_ratio": 4,
       "cache_ratio": 0.1,
-      "enable_groups": ["default", "svip", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
-    },
-    {
-      "model_name": "MiniMax-M2.7",
-      "description": "开启模型的自我迭代 (输出速度约60tps)",
-      "icon": "Minimax.Color",
-      "vendor_id": 6,
-      "quota_type": 0,
-      "model_ratio": 0.15,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 4,
-      "cache_ratio": 0.2,
-      "enable_groups": ["default", "svip", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "has_graduated_pricing": false
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
     }
   ],
-  "group_ratio": { "default": 1 },
+  "group_ratio": {
+    "default": 1
+  },
+  "pricing_version": "a42d372ccf0b5dd13ecf71203521f9d2",
   "success": true,
   "supported_endpoint": {
-    "openai": { "path": "/v1/chat/completions", "method": "POST" }
+    "anthropic": {
+      "path": "/v1/messages",
+      "method": "POST"
+    },
+    "open": {
+      "path": "/v1/messages",
+      "method": "POST"
+    },
+    "openai": {
+      "path": "/v1/chat/completions",
+      "method": "POST"
+    }
   },
-  "usable_group": { "default": "默认分组" },
+  "usable_group": {
+    "default": "用户分组"
+  },
   "vendors": [
-    { "id": 3, "name": "Google", "icon": "Google" },
-    { "id": 4, "name": "Anthropic", "icon": "Anthropic" },
-    { "id": 5, "name": "DeepSeek", "icon": "DeepSeek" },
-    { "id": 6, "name": "MiniMax", "icon": "MiniMax" },
-    { "id": 10, "name": "Vidu", "icon": "Vidu" },
-    { "id": 1, "name": "aiionly" },
-    { "id": 7, "name": "Moonshot", "icon": "Moonshot" },
-    { "id": 8, "name": "智谱", "icon": "Zhipu.Color" },
-    { "id": 9, "name": "快手", "icon": "Kling.Color" },
-    { "id": 2, "name": "OpenAI", "icon": "OpenAI" }
+    {
+      "id": 3,
+      "name": "Google",
+      "icon": "Google"
+    },
+    {
+      "id": 6,
+      "name": "MiniMax",
+      "icon": "MiniMax"
+    },
+    {
+      "id": 8,
+      "name": "智谱",
+      "icon": "Zhipu.Color"
+    },
+    {
+      "id": 9,
+      "name": "快手",
+      "icon": "Kling.Color"
+    },
+    {
+      "id": 10,
+      "name": "Vidu",
+      "icon": "Vidu"
+    },
+    {
+      "id": 4,
+      "name": "Anthropic",
+      "icon": "Anthropic"
+    },
+    {
+      "id": 5,
+      "name": "DeepSeek",
+      "icon": "DeepSeek"
+    },
+    {
+      "id": 7,
+      "name": "Moonshot",
+      "icon": "Moonshot"
+    },
+    {
+      "id": 11,
+      "name": "小米",
+      "description": "小米的MiMo模型"
+    },
+    {
+      "id": 12,
+      "name": "hwdrama",
+      "description": "聚合平台接入seedance 2.0",
+      "icon": "Doubao"
+    },
+    {
+      "id": 13,
+      "name": "字节跳动",
+      "icon": "Doubao.Color"
+    },
+    {
+      "id": 1,
+      "name": "aiionly"
+    },
+    {
+      "id": 2,
+      "name": "OpenAI",
+      "icon": "OpenAI"
+    }
   ]
 }

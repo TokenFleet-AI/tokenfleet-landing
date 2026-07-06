@@ -31,7 +31,7 @@ TokenFleet Landing 是 **TokenFleet** 的公开站点。它以中文为默认语
 | 主要路由     | `/`、`/models`、`/models/[slug]`、`/en`、`/en/models`、`/en/models/[slug]`   |
 | 机器可读路由 | `/sitemap.xml`、`/llms.txt`、`/pricing.md`、`/robots.txt`                    |
 | 目录数据源   | 根目录 `pricing-api.json` 快照                                               |
-| 当前目录     | 12 个 LLM 模型，来自 4 家活跃厂商；源快照注册了 10 家厂商                    |
+| 当前目录     | 15 个 AI 模型，来自 5 家活跃厂商；源快照注册了 13 家厂商                     |
 | 质量门禁     | ESLint、Prettier、`astro check`、生产构建、GitHub Actions CI                 |
 | 构建产物     | 输出到 `dist/` 的静态文件                                                    |
 

@@ -2,7 +2,7 @@
  * model-slug.ts — 稳定的 URL slug 派生，供模型详情页路由与列表内链共用。
  *
  * slug 从 `model_name` 派生：小写 → 非 `[a-z0-9]` 折叠为 `-` → 去首尾 `-`。
- * 例：`DeepSeek-V3.2` → `deepseek-v3-2`。
+ * 例：`deepseek-v3.2` → `deepseek-v3-2`。
  *
  * 唯一性：若两个不同 model_name 归一后撞 slug，对冲突组统一加 vendor 前缀
  * 消歧；仍冲突则构建期抛错（强制显式处理，避免静默覆盖路由）。

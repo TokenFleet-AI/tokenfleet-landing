@@ -14,27 +14,12 @@ export interface ModelMeta {
 
 export const modelMeta: Record<string, ModelMeta> = {
   // DeepSeek
-  'deepseek-v3': {
-    contextK: 64,
-    maxOutputK: 8,
-    docs: 'https://api-docs.deepseek.com/',
-  },
   'deepseek-v3.1': {
     contextK: 128,
     maxOutputK: 8,
     docs: 'https://api-docs.deepseek.com/',
   },
-  'deepseek-v3.2-exp': {
-    contextK: 128,
-    maxOutputK: 64,
-    docs: 'https://api-docs.deepseek.com/',
-  },
-  'DeepSeek-V3.2': {
-    contextK: 128,
-    maxOutputK: 64,
-    docs: 'https://api-docs.deepseek.com/',
-  },
-  'DeepSeek-V3.2-A': {
+  'deepseek-v3.2': {
     contextK: 128,
     maxOutputK: 64,
     docs: 'https://api-docs.deepseek.com/',
@@ -53,6 +38,10 @@ export const modelMeta: Record<string, ModelMeta> = {
   // Moonshot
   'kimi-k2.5': { contextK: 256, docs: 'https://platform.moonshot.cn/docs' },
   'kimi-k2.6': { contextK: 256, docs: 'https://platform.moonshot.cn/docs' },
+  'kimi-k2.7-code': {
+    contextK: 256,
+    docs: 'https://platform.moonshot.cn/docs',
+  },
 
   // MiniMax
   'MiniMax-M2.5': {
@@ -66,6 +55,17 @@ export const modelMeta: Record<string, ModelMeta> = {
 
   // Zhipu
   'glm-5.1': { contextK: 128, docs: 'https://open.bigmodel.cn/dev/api' },
+  'glm-5.2': { docs: 'https://open.bigmodel.cn/dev/api' },
+  'glm-5v-turbo': { docs: 'https://open.bigmodel.cn/dev/api' },
+
+  // ByteDance / Doubao
+  'doubao-seedance-2-0-260128': { docs: 'https://www.volcengine.com/docs' },
+  'doubao-seedance-2-0-fast-260128': {
+    docs: 'https://www.volcengine.com/docs',
+  },
+  'doubao-seedance-2-0-mini-260615': {
+    docs: 'https://www.volcengine.com/docs',
+  },
 };
 
 export function metaOf(name: string): ModelMeta | undefined {

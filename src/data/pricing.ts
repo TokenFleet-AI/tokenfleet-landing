@@ -23,7 +23,7 @@ import raw from '../../pricing-api.json';
 /** USD per 1M tokens when ratio = 1. */
 export const BASE_USD_PER_MTOK = 2;
 
-export type EndpointType = 'openai' | 'anthropic' | 'gemini';
+export type EndpointType = 'openai' | 'anthropic' | 'gemini' | 'open';
 
 export interface PricingTier {
   tier_order: number;
@@ -130,6 +130,7 @@ const VIDEO_HINTS = [
   'minimax-i2v',
   'luma',
   'vidu',
+  'seedance',
 ];
 const IMAGE_HINTS = [
   'nano-banana',
@@ -326,7 +327,6 @@ export function usedVendors(): Vendor[] {
 }
 
 /** Endpoint definitions (for dialog metadata strip). */
-export const endpointDefs = raw.supported_endpoint as Record<
-  EndpointType,
-  { path: string; method: string }
+export const endpointDefs = raw.supported_endpoint as Partial<
+  Record<EndpointType, { path: string; method: string }>
 >;

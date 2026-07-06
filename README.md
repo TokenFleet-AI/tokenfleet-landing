@@ -31,7 +31,7 @@ TokenFleet Landing is the public site for **TokenFleet**. It explains the produc
 | Main routes             | `/`, `/models`, `/models/[slug]`, `/en`, `/en/models`, `/en/models/[slug]`                |
 | Machine-readable routes | `/sitemap.xml`, `/llms.txt`, `/pricing.md`, `/robots.txt`                                 |
 | Catalog source          | Root `pricing-api.json` snapshot                                                          |
-| Current catalog         | 12 LLM models across 4 active vendors; 10 vendors registered in the source snapshot       |
+| Current catalog         | 15 AI models across 5 active vendors; 13 vendors registered in the source snapshot        |
 | Quality gates           | ESLint, Prettier, `astro check`, production build, GitHub Actions CI                      |
 | Build output            | Static files in `dist/`                                                                   |
 

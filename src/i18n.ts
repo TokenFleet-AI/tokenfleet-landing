@@ -77,11 +77,12 @@ export const i18n = {
       fallbackBlurb: '生产级模型接入',
       blurbs: {
         'deepseek-v4-pro': 'DeepSeek 新一代旗舰推理模型',
-        'DeepSeek-V3.2': '高性价比推理与工具调用',
-        'kimi-k2.5': '原生视觉智能体引擎',
+        'deepseek-v3.2': '高性价比推理与工具调用',
         'kimi-k2.6': '国产长文本与办公场景',
+        'kimi-k2.7-code': '代码与智能体工作流',
         'MiniMax-M2.7': '高效编程与自我迭代',
-        'glm-5.1': '智谱新一代语言模型',
+        'glm-5.2': '智谱新一代语言模型',
+        'doubao-seedance-2-0-fast-260128': '字节 Seedance 视频模型',
       },
       facts: {
         models: '生产级模型',
@@ -345,11 +346,12 @@ export const i18n = {
       fallbackBlurb: 'Production model access',
       blurbs: {
         'deepseek-v4-pro': 'Next-gen DeepSeek flagship reasoning model',
-        'DeepSeek-V3.2': 'Efficient reasoning and tool use',
-        'kimi-k2.5': 'Native visual agent engine',
+        'deepseek-v3.2': 'Efficient reasoning and tool use',
         'kimi-k2.6': 'Long-form Chinese documents and office tasks',
+        'kimi-k2.7-code': 'Coding and agent workflows',
         'MiniMax-M2.7': 'Efficient coding with self-iteration',
-        'glm-5.1': 'Next-gen Zhipu language model',
+        'glm-5.2': 'Next-gen Zhipu language model',
+        'doubao-seedance-2-0-fast-260128': 'ByteDance Seedance video model',
       },
       facts: {
         models: 'Production models',
