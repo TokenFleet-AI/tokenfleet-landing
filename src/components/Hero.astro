@@ -18,8 +18,8 @@
 import HeroBackdrop from './HeroBackdrop.astro';
 import CodeBlock from './CodeBlock.astro';
 import { totalModelCount } from '../data/pricing.ts';
-import { i18n, localePath, type Locale } from '../i18n.ts';
-import { DASHBOARD_URL, DOCS_URL } from '../site-links.ts';
+import { i18n, type Locale } from '../i18n.ts';
+import { DASHBOARD_URL, DOCS_URL, PRICING_URL } from '../site-links.ts';
 
 interface Props {
   locale?: Locale;
@@ -75,7 +75,7 @@ const total = totalModelCount();
 
       <ul class="hero__trust" aria-label={t.hero.trustAria}>
         <li>
-          <a class="hero__trust-link" href={localePath(locale, '/models')}
+          <a class="hero__trust-link" href={PRICING_URL}
             >{t.hero.trustModels(total)}</a
           >
         </li>

@@ -26,7 +26,7 @@ import wechatGroupQR from '../assets/QRCode/wechat-group.jpg';
 import wechatSubQR from '../assets/QRCode/wechat-sub.jpg';
 import douyinQR from '../assets/QRCode/douyin.webp';
 import { i18n, localePath, type Locale } from '../i18n.ts';
-import { DOCS_URL } from '../site-links.ts';
+import { DOCS_URL, PRICING_URL } from '../site-links.ts';
 
 interface Props {
   locale?: Locale;
@@ -38,7 +38,7 @@ const cols = [
   {
     title: t.footer.cols.product,
     items: [
-      { label: t.footer.links.models, href: localePath(locale, '/models') },
+      { label: t.footer.links.models, href: PRICING_URL },
       {
         label: t.footer.links.enterprise,
         href: `${localePath(locale, '/')}#enterprise`,

@@ -11,12 +11,12 @@
 import {
   loadModels,
   modalityLabel,
-  priceLabel,
   totalModelCount,
   usedVendors,
   vendorDisplayName,
 } from '../data/pricing.ts';
-import { i18n, localePath, type Locale } from '../i18n.ts';
+import { i18n, type Locale } from '../i18n.ts';
+import { PRICING_URL } from '../site-links.ts';
 
 interface Props {
   locale?: Locale;
@@ -68,7 +68,7 @@ const featuredTitle = t.featured.title(total).split('\n');
       <p class="featured__body">
         {t.featured.body}
       </p>
-      <a href={localePath(locale, '/models')} class="link featured__link">
+      <a href={PRICING_URL} class="link featured__link">
         {t.featured.viewAll}
         <svg
           width="12"
@@ -87,24 +87,16 @@ const featuredTitle = t.featured.title(total).split('\n');
       </a>
       <ul class="featured__taxonomy mono">
         <li>
-          <a href={`${localePath(locale, '/models')}?modality=chat`}
-            >{t.models.modalities.chat}</a
-          >
+          <a href={PRICING_URL}>{t.models.modalities.chat}</a>
         </li>
         <li>
-          <a href={`${localePath(locale, '/models')}?modality=image`}
-            >{t.models.modalities.image}</a
-          >
+          <a href={PRICING_URL}>{t.models.modalities.image}</a>
         </li>
         <li>
-          <a href={`${localePath(locale, '/models')}?modality=video`}
-            >{t.models.modalities.video}</a
-          >
+          <a href={PRICING_URL}>{t.models.modalities.video}</a>
         </li>
         <li>
-          <a href={`${localePath(locale, '/models')}?modality=audio`}
-            >{t.models.modalities.audio}</a
-          >
+          <a href={PRICING_URL}>{t.models.modalities.audio}</a>
         </li>
       </ul>
     </div>
@@ -139,7 +131,6 @@ const featuredTitle = t.featured.title(total).split('\n');
               <p class="modelcard__id mono">{m.model_name}</p>
               <p class="modelcard__blurb">{m.blurb}</p>
             </div>
-            <p class="modelcard__price mono">{priceLabel(m, locale)}</p>
           </li>
         ))
       }
@@ -455,17 +446,6 @@ const featuredTitle = t.featured.title(total).split('\n');
     font-size: 13px;
     line-height: 1.45;
     color: var(--color-ink-secondary);
-  }
-
-  .modelcard__price {
-    font-size: 11px;
-    letter-spacing: -0.005em;
-    border-top: 1px solid currentColor;
-    padding-top: 14px;
-    margin-top: auto;
-    color: var(--color-ink-mute);
-    position: relative;
-    z-index: 2;
   }
 
   /* ── responsive ───────────────────────────────────────────────────────── */
