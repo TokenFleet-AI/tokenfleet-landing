@@ -247,7 +247,7 @@ const featuredTitle = t.featured.title(total).split('\n');
 
   /* ── fact strip: aggregate catalog facts below the grid ───────────────── */
   .featured__facts {
-    grid-column: 1 / -1;
+    grid-column: 2;
     margin-top: clamp(28px, 4vw, 44px);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -458,6 +458,9 @@ const featuredTitle = t.featured.title(total).split('\n');
     .featured__lede {
       position: static;
       max-width: 540px;
+    }
+    .featured__facts {
+      grid-column: 1 / -1;
     }
     .featured__grid {
       grid-template-columns: repeat(6, minmax(0, 1fr));
