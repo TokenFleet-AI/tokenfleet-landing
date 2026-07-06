@@ -351,23 +351,30 @@ const follow = [
     gap: 8px;
   }
 
-  .footer__link {
+  /* `.footer__link` is also applied to a <button> rendered by the
+     SalesQrLightbox child component. Astro scoped styles only match elements
+     authored in *this* template, so the child-rendered button misses these
+     rules and falls back to body defaults (larger size, darker color).
+     `.footer` is the scoped anchor; `:global(.footer__link)` lets the rule
+     reach the button without leaking outside the footer. */
+  .footer :global(.footer__link) {
+    font-family: inherit;
     font-size: 13px;
     color: var(--color-ink-secondary);
     transition: color var(--motion-base) var(--ease-out-quart);
   }
 
-  .footer__link:hover {
+  .footer :global(.footer__link):hover {
     color: var(--color-primary);
   }
 
-  .footer__link-button {
+  .footer :global(.footer__link-button) {
     padding: 0;
     text-align: left;
     cursor: pointer;
   }
 
-  .footer__link-button:focus-visible,
+  .footer :global(.footer__link-button):focus-visible,
   .footer__company-link:focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
