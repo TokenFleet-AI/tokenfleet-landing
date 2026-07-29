@@ -40,3 +40,7 @@ skills-lock.json
 
 # spurious gitattributes (Trellis-managed, not tracked here)
 .gitattributes
+
+# pnpm artifacts (project uses npm; pnpm-lock.yaml / pnpm-workspace.yaml are local)
+pnpm-lock.yaml
+pnpm-workspace.yaml
