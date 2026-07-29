@@ -48,10 +48,10 @@ const rpm = fmtLimit(limits?.rpm);
   class="modelrow"
   data-type={typeSlug}
   data-vendor={vSlug}
-  data-name={model.model_name.toLowerCase()}
+  data-name={`${model.displayName} ${model.model_name}`.toLowerCase()}
   data-name-order={nameOrder}
 >
-  <div class="modelrow__name">{model.model_name}</div>
+  <div class="modelrow__name">{model.displayName}</div>
   <code class="modelrow__id mono" title={t.models.copyId}
     >{model.model_name}</code
   >

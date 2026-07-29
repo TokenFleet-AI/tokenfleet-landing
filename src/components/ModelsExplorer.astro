@@ -31,11 +31,12 @@ const models = loadModels();
 const vendors = usedVendors();
 const total = totalModelCount();
 
-// Precompute A–Z rank (0 = first alphabetically) for name sorting.
+// Precompute A–Z rank (0 = first alphabetically) for name sorting. Sort by the
+// user-visible display name, not the API model ID.
 const nameRank = new Map<string, number>();
 [...models]
   .sort((a, b) =>
-    a.model_name.toLowerCase().localeCompare(b.model_name.toLowerCase())
+    a.displayName.toLowerCase().localeCompare(b.displayName.toLowerCase())
   )
   .forEach((m, i) => nameRank.set(m.model_name, i));
 
