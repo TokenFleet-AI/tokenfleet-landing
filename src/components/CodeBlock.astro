@@ -3,7 +3,7 @@
  * CodeBlock.astro — three-tab code panel for hero.
  *
  * Tabs: curl / Python / Node. Same chat-completions call. The shared
- * `base_url=https://tokenfleet.cn/default/v1` line and the `model="deepseek-v4-pro"`
+ * `base_url=https://tokenfleet.cn/v1` line and the `model="deepseek-v4-pro"`
  * line carry indigo voltage to visualize the unified endpoint at a glance,
  * without forcing the visitor to read the body.
  *
@@ -29,7 +29,7 @@ const tabs = [
   {
     id: 'curl',
     label: 'curl',
-    rawCopy: `curl https://tokenfleet.cn/default/v1/chat/completions \\
+    rawCopy: `curl https://tokenfleet.cn/v1/chat/completions \\
   -H "Authorization: Bearer $TOKENFLEET_API_KEY" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -37,7 +37,7 @@ const tabs = [
     "messages": [{"role": "user", "content": "${prompt}"}]
   }'`,
     html: `<span class="cb-cmt"># ${t.code.comment}</span>
-<span class="cb-fn">curl</span> <span class="cb-hl">https://tokenfleet.cn/default/v1</span>/chat/completions \\
+<span class="cb-fn">curl</span> <span class="cb-hl">https://tokenfleet.cn/v1</span>/chat/completions \\
   -H <span class="cb-str">"Authorization: Bearer $TOKENFLEET_API_KEY"</span> \\
   -H <span class="cb-str">"Content-Type: application/json"</span> \\
   -d <span class="cb-str">'{
@@ -51,7 +51,7 @@ const tabs = [
     rawCopy: `from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://tokenfleet.cn/default/v1",
+    base_url="https://tokenfleet.cn/v1",
     api_key=os.environ["TOKENFLEET_API_KEY"],
 )
 
@@ -63,7 +63,7 @@ print(resp.choices[0].message.content)`,
     html: `<span class="cb-kw">from</span> openai <span class="cb-kw">import</span> OpenAI
 
 client = OpenAI(
-    base_url=<span class="cb-hl">"https://tokenfleet.cn/default/v1"</span>,
+    base_url=<span class="cb-hl">"https://tokenfleet.cn/v1"</span>,
     api_key=os.environ[<span class="cb-str">"TOKENFLEET_API_KEY"</span>],
 )
 
@@ -79,7 +79,7 @@ resp = client.chat.completions.create(
     rawCopy: `import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://tokenfleet.cn/default/v1",
+  baseURL: "https://tokenfleet.cn/v1",
   apiKey: process.env.TOKENFLEET_API_KEY,
 });
 
@@ -91,7 +91,7 @@ console.log(resp.choices[0].message.content);`,
     html: `<span class="cb-kw">import</span> OpenAI <span class="cb-kw">from</span> <span class="cb-str">"openai"</span>;
 
 <span class="cb-kw">const</span> client = <span class="cb-kw">new</span> <span class="cb-fn">OpenAI</span>({
-  baseURL: <span class="cb-hl">"https://tokenfleet.cn/default/v1"</span>,
+  baseURL: <span class="cb-hl">"https://tokenfleet.cn/v1"</span>,
   apiKey: process.env.TOKENFLEET_API_KEY,
 });
 

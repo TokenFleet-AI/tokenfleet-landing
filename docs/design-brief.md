@@ -16,7 +16,7 @@ TokenFleet 简体中文落地页（单页 / production-ready / 9 段）。fal.ai
 
 ## 2. Primary User Action
 
-**首屏 5 秒内**：工程师抓住 hero 多 tab 代码块（curl / Python / Node），感知 `base_url=https://tokenfleet.cn/default/v1` 一行替换即可复用 OpenAI 官方 SDK。
+**首屏 5 秒内**：工程师抓住 hero 多 tab 代码块（curl / Python / Node），感知 `base_url=https://tokenfleet.cn/v1` 一行替换即可复用 OpenAI 官方 SDK。
 **次级动作**：
 
 - 工程读者 → indigo pill `开始接入` 注册 API key，或滚动至 Why-us 卡 C 验证 SDK 兼容差异。
@@ -54,7 +54,7 @@ editorial-calm 主体 + 三色区轮换（mesh / cream / dark）制造节奏。S
 2. **Hero（双列 + mesh 背景）**：
    - **Mesh** 装满上 ~55% viewport，文字与代码块浮于 mesh 之上的 white container（不是直接落到 mesh，是浮于 mesh 之上的"editorial canvas"）。
    - **左 ~50%**：mono micro-cap eyebrow `MODEL API · UNIFIED` → Sohne thin display headline (56px / weight 300 / -1.4px letter-spacing) → 副 ≤2 行 body-lg → 双 CTA（indigo pill `开始接入` + outline pill `查看文档`）→ 信任行 mono `34 个生产级模型 · OpenAI SDK 兼容 · 国内直连`。
-   - **右 ~50%**：多 tab 代码块。chrome = mono 终端风（顶 3 mono tab + 右上 `复制` mono），background = `{colors.canvas}`，1px hairline border，Level 1 shadow（DESIGN.md 已允许 `card-dashboard-mockup` 用 Level 2 shadow，此处取 Level 1 以保 hero 浮感）。3 tab 共同点 = `base_url=https://tokenfleet.cn/default/v1`（indigo voltage 高亮该行 + model id 行），model=`claude-opus-4-7`。**禁** macOS stoplight 红黄绿点。
+   - **右 ~50%**：多 tab 代码块。chrome = mono 终端风（顶 3 mono tab + 右上 `复制` mono），background = `{colors.canvas}`，1px hairline border，Level 1 shadow（DESIGN.md 已允许 `card-dashboard-mockup` 用 Level 2 shadow，此处取 Level 1 以保 hero 浮感）。3 tab 共同点 = `base_url=https://tokenfleet.cn/v1`（indigo voltage 高亮该行 + model id 行），model=`claude-opus-4-7`。**禁** macOS stoplight 红黄绿点。
    - **Mobile (<640px)**：双列退化为上下叠（标题 → 代码块），代码块允许横向滚动。
 
 3. **Featured Models Gallery**：背景 `{colors.canvas-soft}`。左 ~30% sans display-lg 标题 `34 个生产级模型，一份计费` + mono caption 分类索引（LLM · 图像 · 视频 · 音频）+ inline link `查看全部 →` (indigo)。右 ~70% **5-up 模型卡**（mobile 2 列 / tablet 3 列 / desktop 5 列）：
@@ -84,7 +84,7 @@ editorial-calm 主体 + 三色区轮换（mesh / cream / dark）制造节奏。S
 6. **Why-us 2×2 Grid**（替换 fal.ai 速度卡，背景 `{colors.canvas-soft}`）：
    - **A: `34 个生产级模型，一个 endpoint`** — 4×9 或 6×6 mono 网格（共 34 格，每格 `claude-opus-4-7  /  Anthropic`），副 `覆盖 LLM / 图像 / 视频 / 音频`。
    - **B: `私有部署 / VPC 直连`** — schematic：`Public endpoint → Private VPC` 240×160 box+arrow 单色 1.5px stroke（ink / indigo voltage）。
-   - **C: `OpenAI SDK 即插即用`** — mono code diff 两行：原 `api.openai.com/v1` → 改 `tokenfleet.cn/default/v1`（indigo 高亮 diff 行）。副 `一行替换，零代码改动`。
+   - **C: `OpenAI SDK 即插即用`** — mono code diff 两行：原 `api.openai.com/v1` → 改 `tokenfleet.cn/v1`（indigo 高亮 diff 行）。副 `一行替换，零代码改动`。
    - **D: `国内直连，毫秒级延迟`** — 替换原 PRD D 卡（finance 维度已在 §5 Built for Business 单独承担）。schematic：海外 endpoint → 国内 CDN/中转节点 → 客户端，配 mono caption `北京 / 上海 / 广州 / 深圳 / 杭州 平均 P50 latency [待填]`。
 
 7. **Enterprise Dark Band**（整页唯一明度反转 / focus 工程侧 enterprise）：背景 `{colors.brand-dark-900}` (#1c1e54)。display-xl 白色 sans `服务大规模生产用量`（**不**写"为企业打造"）。3 条 mono label 横排：`企业级 SLA — 可定制承诺` · `私有部署 / VPC 直连 — 可商谈` · `专属技术对接 — 支持`。单 CTA indigo pill `联系销售 →`。**绝对禁** SOC 2 / ISO / HIPAA / 99.95% 等未拿到资质（PRODUCT.md 硬约束）。
