@@ -2,6 +2,21 @@
   "auto_groups": ["default"],
   "data": [
     {
+      "model_name": "MiniMax-M2.5",
+      "description": "MiniMax 提供多款文本模型，满足不同场景需求。MiniMax-M2.5 在编程、工具调用和搜索、办公等生产力场景都达到或刷新了行业的 SOTA，MiniMax-M2 专为高效编码与 Agent 工作流而生",
+      "icon": "Minimax.Color",
+      "tags": "多语言编程",
+      "vendor_id": 6,
+      "quota_type": 0,
+      "model_ratio": 0.15,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 4,
+      "cache_ratio": 0.1,
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
       "model_name": "MiniMax-M2.7",
       "description": "开启模型的自我迭代 (输出速度约60tps)",
       "icon": "Minimax.Color",
@@ -12,49 +27,7 @@
       "owner_by": "",
       "completion_ratio": 4,
       "cache_ratio": 0.2,
-      "enable_groups": ["svip", "test", "vip", "default"],
-      "supported_endpoint_types": ["openai"],
-      "pricing_version": "5a90f2b86c08bd983a9a2e6d66c255f4eaef9c4bc934386d2b6ae84ef0ff1f1f"
-    },
-    {
-      "model_name": "glm-5.1",
-      "vendor_id": 8,
-      "quota_type": 0,
-      "model_ratio": 0.42857142855,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 4.000000000233,
-      "cache_ratio": 0.216666333344,
-      "enable_groups": ["svip", "test", "vip", "default"],
-      "supported_endpoint_types": ["openai"],
-      "billing_mode": "tiered_expr",
-      "billing_expr": "len < 32000 ? tier(\"standard\", p * 0.86 + c * 3.43 + cr * 0.19) : tier(\"long_context\", p * 1.14 + c * 4 + cr * 0.29)"
-    },
-    {
-      "model_name": "glm-5v-turbo",
-      "vendor_id": 8,
-      "quota_type": 0,
-      "model_ratio": 0.6,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 3.3333333333333335,
-      "cache_ratio": 0.2,
       "enable_groups": ["default", "svip", "test", "vip"],
-      "supported_endpoint_types": ["openai"],
-      "billing_mode": "tiered_expr",
-      "billing_expr": "len < 32000 ? tier(\"standard\", p * 0.71 + c * 3.14 + cr * 0.17) : tier(\"long_context\", p * 1 + c * 3.71 + cr * 0.26)"
-    },
-    {
-      "model_name": "kimi-k2.6",
-      "vendor_id": 7,
-      "quota_type": 0,
-      "model_ratio": 0.4642857,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 4.153846327811,
-      "cache_ratio": 0.200000021538,
-      "create_cache_ratio": 1.250000053846,
-      "enable_groups": ["svip", "test", "vip", "default"],
       "supported_endpoint_types": ["openai"]
     },
     {
@@ -71,41 +44,6 @@
       "supported_endpoint_types": ["openai"]
     },
     {
-      "model_name": "doubao-seedance-2-0-mini-260615",
-      "vendor_id": 13,
-      "quota_type": 0,
-      "model_ratio": 1.64285714285,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 1,
-      "enable_groups": ["default"],
-      "supported_endpoint_types": ["openai"]
-    },
-    {
-      "model_name": "deepseek-v4-pro",
-      "vendor_id": 5,
-      "quota_type": 0,
-      "model_ratio": 0.857142857,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 2.00000000035,
-      "cache_ratio": 0.008333333335,
-      "enable_groups": ["ds-vip", "svip", "default"],
-      "supported_endpoint_types": ["anthropic", "open"]
-    },
-    {
-      "model_name": "glm-5.2",
-      "vendor_id": 8,
-      "quota_type": 0,
-      "model_ratio": 0.5714285715,
-      "model_price": 0,
-      "owner_by": "",
-      "completion_ratio": 3.5,
-      "cache_ratio": 0.250000000219,
-      "enable_groups": ["svip", "test", "vip", "default"],
-      "supported_endpoint_types": ["openai"]
-    },
-    {
       "model_name": "deepseek-v3.2",
       "vendor_id": 5,
       "quota_type": 0,
@@ -113,7 +51,7 @@
       "model_price": 0,
       "owner_by": "",
       "completion_ratio": 1.5,
-      "enable_groups": ["svip", "test", "vip", "default", "ds-vip"],
+      "enable_groups": ["default", "ds-vip", "ds_65", "svip", "vip"],
       "supported_endpoint_types": ["openai"]
     },
     {
@@ -125,8 +63,20 @@
       "owner_by": "",
       "completion_ratio": 2.0000000007,
       "cache_ratio": 0.020000000308,
-      "enable_groups": ["vip", "default", "ds-vip", "svip", "test"],
+      "enable_groups": ["default", "ds-vip", "ds_65", "svip", "test", "vip"],
       "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "deepseek-v4-pro",
+      "vendor_id": 5,
+      "quota_type": 0,
+      "model_ratio": 0.857142857,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 2.00000000035,
+      "cache_ratio": 0.008333333335,
+      "enable_groups": ["default", "ds-vip", "ds_25", "ds_4", "svip", "vip"],
+      "supported_endpoint_types": ["anthropic", "open"]
     },
     {
       "model_name": "doubao-seedance-2-0-260128",
@@ -151,6 +101,57 @@
       "supported_endpoint_types": ["openai"]
     },
     {
+      "model_name": "doubao-seedance-2-0-mini-260615",
+      "vendor_id": 13,
+      "quota_type": 0,
+      "model_ratio": 1.64285714285,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 1,
+      "enable_groups": ["default"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "glm-5.1",
+      "vendor_id": 8,
+      "quota_type": 0,
+      "model_ratio": 0.42857142855,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 4.000000000233,
+      "cache_ratio": 0.216666333344,
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"],
+      "billing_mode": "tiered_expr",
+      "billing_expr": "len < 32000 ? tier(\"standard\", p * 0.86 + c * 3.43 + cr * 0.19) : tier(\"long_context\", p * 1.14 + c * 4 + cr * 0.29)"
+    },
+    {
+      "model_name": "glm-5.2",
+      "vendor_id": 8,
+      "quota_type": 0,
+      "model_ratio": 0.5714285715,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 3.5,
+      "cache_ratio": 0.250000000219,
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "glm-5v-turbo",
+      "vendor_id": 8,
+      "quota_type": 0,
+      "model_ratio": 0.6,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 3.3333333333333335,
+      "cache_ratio": 0.2,
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"],
+      "billing_mode": "tiered_expr",
+      "billing_expr": "len < 32000 ? tier(\"standard\", p * 0.71 + c * 3.14 + cr * 0.17) : tier(\"long_context\", p * 1 + c * 3.71 + cr * 0.26)"
+    },
+    {
       "model_name": "kimi-k2.5",
       "description": "Kimi K2.5 是 Moonshot AI 推出的旗舰级开源多模态语言模型产品，是 Kimi 迄今最智能的模型，在 Agent、代码、视觉理解及一系列通用智能任务上取得开源 SoTA 表现。同时 Kimi K2.5 也是 Kimi 迄今最全能的模型，原生的多模态架构设计，同时支持视觉与文本输入、思考与非思考模式、对话与 Agent 任务，核心定位为“原生视觉智能体引擎”，专为编码、办公与复杂任务自主协同而设计。\n\n    性能突破：在 HLE、BrowseComp、SWE-Verified 三大智能体基准中表现强劲，成本远低于竞品。\n    架构创新：全球首个支持自组织“智能体蜂群”（Agent Swarm）的开源模型，可动态调度最多100个子智能体，并行执行高达1,500次工具调用。\n    编码革命：最强开源多模态编码模型，支持从对话或视频直接生成带交互动画的前端界面，实现“所见即所得”的视觉编程。\n    办公提效：端到端处理万字文档、百页报告、财务模型与LaTeX公式，复杂办公任务从小时级缩短至分钟级。\n    效率跃升：相比单智能体，蜂群模式最高减少80%执行时间，关键路径步骤压缩3–4.5倍，真正实现“秒级响应”。",
       "icon": "Moonshot.Color",
@@ -160,6 +161,19 @@
       "model_price": 0,
       "owner_by": "",
       "completion_ratio": 5.25,
+      "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "kimi-k2.6",
+      "vendor_id": 7,
+      "quota_type": 0,
+      "model_ratio": 0.4642857,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 4.153846327811,
+      "cache_ratio": 0.200000021538,
+      "create_cache_ratio": 1.250000053846,
       "enable_groups": ["default", "svip", "test", "vip"],
       "supported_endpoint_types": ["openai"]
     },
@@ -176,18 +190,15 @@
       "supported_endpoint_types": ["openai"]
     },
     {
-      "model_name": "MiniMax-M2.5",
-      "description": "MiniMax 提供多款文本模型，满足不同场景需求。MiniMax-M2.5 在编程、工具调用和搜索、办公等生产力场景都达到或刷新了行业的 SOTA，MiniMax-M2 专为高效编码与 Agent 工作流而生",
-      "icon": "Minimax.Color",
-      "tags": "多语言编程",
-      "vendor_id": 6,
+      "model_name": "kimi-k3",
+      "vendor_id": 7,
       "quota_type": 0,
-      "model_ratio": 0.15,
+      "model_ratio": 1.42857142855,
       "model_price": 0,
       "owner_by": "",
-      "completion_ratio": 4,
-      "cache_ratio": 0.1,
-      "enable_groups": ["default", "svip", "test", "vip"],
+      "completion_ratio": 5.00000000007,
+      "cache_ratio": 0.099999999997,
+      "enable_groups": ["default", "test"],
       "supported_endpoint_types": ["openai"]
     }
   ],
@@ -215,14 +226,38 @@
   },
   "vendors": [
     {
+      "id": 1,
+      "name": "aiionly"
+    },
+    {
+      "id": 2,
+      "name": "OpenAI",
+      "icon": "OpenAI"
+    },
+    {
       "id": 3,
       "name": "Google",
       "icon": "Google"
     },
     {
+      "id": 4,
+      "name": "Anthropic",
+      "icon": "Anthropic"
+    },
+    {
+      "id": 5,
+      "name": "DeepSeek",
+      "icon": "DeepSeek"
+    },
+    {
       "id": 6,
       "name": "MiniMax",
       "icon": "MiniMax"
+    },
+    {
+      "id": 7,
+      "name": "Moonshot",
+      "icon": "Moonshot"
     },
     {
       "id": 8,
@@ -238,21 +273,6 @@
       "id": 10,
       "name": "Vidu",
       "icon": "Vidu"
-    },
-    {
-      "id": 4,
-      "name": "Anthropic",
-      "icon": "Anthropic"
-    },
-    {
-      "id": 5,
-      "name": "DeepSeek",
-      "icon": "DeepSeek"
-    },
-    {
-      "id": 7,
-      "name": "Moonshot",
-      "icon": "Moonshot"
     },
     {
       "id": 11,
@@ -271,13 +291,9 @@
       "icon": "Doubao.Color"
     },
     {
-      "id": 1,
-      "name": "aiionly"
-    },
-    {
-      "id": 2,
-      "name": "OpenAI",
-      "icon": "OpenAI"
+      "id": 14,
+      "name": "Tencent",
+      "description": "腾讯大模型"
     }
   ]
 }

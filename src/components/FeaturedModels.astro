@@ -1,6 +1,7 @@
 ---
 /**
- * FeaturedModels.astro — 6-up Featured Models gallery.
+ * FeaturedModels.astro — Featured Models gallery (editorial pick, see
+ * `src/data/featured.ts`).
  *
  * Layout: left ~32% section title + intro link, right ~68% asymmetric model
  * grid. Each card = neutral surface +
@@ -15,6 +16,7 @@ import {
   usedVendors,
   vendorDisplayName,
 } from '../data/pricing.ts';
+import { featuredModelIds } from '../data/featured.ts';
 import { i18n, type Locale } from '../i18n.ts';
 import { PRICING_URL } from '../site-links.ts';
 
@@ -27,15 +29,6 @@ const t = i18n[locale];
 const total = totalModelCount();
 const vendorCount = usedVendors().length;
 const facts = t.featured.facts;
-const featuredModelIds = [
-  'deepseek-v4-pro',
-  'deepseek-v3.2',
-  'kimi-k2.6',
-  'kimi-k2.7-code',
-  'MiniMax-M2.7',
-  'glm-5.2',
-  'doubao-seedance-2-0-fast-260128',
-];
 const featuredBlurbs: Record<string, string> = t.featured.blurbs;
 const modelById = new Map(
   loadModels().map((model) => [model.model_name, model])

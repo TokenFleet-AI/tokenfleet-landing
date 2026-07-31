@@ -17,6 +17,7 @@ import {
   totalModelCount,
   vendorDisplayName,
 } from '../data/pricing.ts';
+import { endpointDemoIds, marqueeIds } from '../data/featured.ts';
 import { i18n, type Locale } from '../i18n.ts';
 import { PRICING_URL } from '../site-links.ts';
 
@@ -30,30 +31,30 @@ const allModels = loadModels();
 const total = totalModelCount();
 
 /**
- * Full catalog — all 15 production models across 5 vendors.
+ * Editorial pick of catalog IDs (see `src/data/featured.ts`). Anything not
+ * listed folds into the "+N more" link below, whose count is derived.
  */
-const marqueeIds = [
-  'MiniMax-M2.7',
-  'glm-5.1',
-  'glm-5v-turbo',
-  'kimi-k2.6',
-  'deepseek-v3.1',
-  'doubao-seedance-2-0-mini-260615',
-  'deepseek-v4-pro',
-  'glm-5.2',
-  'deepseek-v3.2',
-  'deepseek-v4-flash',
-  'doubao-seedance-2-0-260128',
-  'doubao-seedance-2-0-fast-260128',
-  'kimi-k2.5',
-  'kimi-k2.7-code',
-  'MiniMax-M2.5',
-];
 const byId = new Map(allModels.map((m) => [m.model_name, m]));
 const marquee = marqueeIds
   .map((id) => byId.get(id))
   .filter(Boolean) as typeof allModels;
 const remaining = total - marquee.length;
+
+/**
+ * Card C endpoint demo rows. IDs are an editorial pick (see `featured.ts`);
+ * everything shown is derived from the catalog, so a vendor caption can never
+ * drift from the model it labels.
+ */
+const endpointDemo = endpointDemoIds
+  .map((id) => byId.get(id))
+  .filter(Boolean)
+  .map((model, i) => ({
+    /** the `model:` value as shown, quotes included */
+    label: `"${model!.model_name}"`,
+    /** brand slug behind the "via …" caption: 'zhipu-color' → 'zhipu' */
+    vendor: model!.iconSlug.replace(/-color$/, ''),
+    cls: i === 0 ? 'endpoint-demo__value is-active' : 'endpoint-demo__value',
+  }));
 
 const cities = [
   { city: t.why.cities[0], p50: '142' },
@@ -427,25 +428,13 @@ const cities = [
           <div class="endpoint-demo__row endpoint-demo__row--model">
             <span class="endpoint-demo__key">model:</span>
             <span class="endpoint-demo__values">
-              <span
-                class="endpoint-demo__value is-active"
-                data-vendor="deepseek">"deepseek-v4-pro"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="moonshot"
-                >"kimi-k2.6"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="doubao"
-                >"doubao-seedance-2-0-fast-260128"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="minimax"
-                >"MiniMax-M2.7"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="zhipu"
-                >"glm-5.2"</span
-              >
-              <span class="endpoint-demo__value" data-vendor="deepseek"
-                >"deepseek-v3.2"</span
-              >
+              {
+                endpointDemo.map((m) => (
+                  <span class={m.cls} data-vendor={m.vendor}>
+                    {m.label}
+                  </span>
+                ))
+              }
             </span>
           </div>
           <div class="endpoint-demo__row endpoint-demo__row--status">

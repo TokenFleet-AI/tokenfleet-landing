@@ -1,0 +1,185 @@
+name: sync-models
+
+on:
+  # 22:00 UTC = 次日 06:00 Asia/Shanghai
+  schedule:
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+    inputs:
+      allow_shrink:
+        description: 允许模型数较现有快照大幅下降（仅用于人工确认过的大规模下架）
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# 同步是幂等的，同时跑多次无益；不取消进行中的那次，避免写到一半被打断。
+concurrency:
+  group: sync-models
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # 凭证只经 env 注入：不进命令行参数、不 echo，避免出现在日志或进程列表里。
+      # 安全阀（success 非真 / data 为空 / vendors 为空 / 模型数腰斩）不通过时
+      # 脚本 exit 1 且不写盘 —— 凭证失效不会把模型目录清空。
+      - name: Sync pricing snapshot
+        env:
+          TF_USERNAME: ${{ secrets.TF_USERNAME }}
+          TF_PASSWORD: ${{ secrets.TF_PASSWORD }}
+          ALLOW_SHRINK: ${{ inputs.allow_shrink }}
+        run: |
+          args=(--summary-file "$RUNNER_TEMP/model-sync-summary.md")
+          if [ "$ALLOW_SHRINK" = 'true' ]; then
+            args+=(--allow-shrink)
+          fi
+          npm run sync:models -- "${args[@]}"
+
+      # 线上与快照一致时到此为止：不跑自检、不开 PR、不产生空提交。
+      - name: Detect changes
+        id: diff
+        run: |
+          # 用 status --porcelain 而非 diff --quiet：后者不刷新 index，
+          # 仅 mtime 变化（脚本重写了同样内容）时会误报有变更。
+          if [ -z "$(git status --porcelain -- pricing-api.json)" ]; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            echo '线上模型目录与仓库快照一致，本次无变更，未创建 PR。' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+            if [ -s "$RUNNER_TEMP/model-sync-summary.md" ]; then
+              cat "$RUNNER_TEMP/model-sync-summary.md" >> "$GITHUB_STEP_SUMMARY"
+            fi
+          fi
+
+      # 以下自检全部 continue-on-error：失败也要把 PR 开出来，
+      # 否则上游变更会连同失败原因一起被埋掉。结果写进 PR 正文，
+      # 并由最后一步 Fail if any check failed 把 job 置红。
+      - name: Format check
+        id: format
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        run: npm run format:check
+
+      - name: Lint
+        id: lint
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        run: npm run lint
+
+      - name: Build
+        id: build
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        run: npm run build
+
+      - name: Astro check
+        id: astro
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        run: npm run check
+
+      # --silent 抑制 npm 的 "> pkg@ver script" 横幅，避免污染 markdown。
+      # shell: bash 是必需的 —— 它带 -o pipefail，否则 tee 会吞掉
+      # check:catalog 的硬错误退出码，孤儿 id 就检不出来了。
+      - name: Catalog consistency check
+        id: catalog
+        if: steps.diff.outputs.changed == 'true'
+        continue-on-error: true
+        shell: bash
+        run: npm run --silent check:catalog -- --markdown | tee "$RUNNER_TEMP/catalog-check.md"
+
+      - name: Compose PR body
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          FMT: ${{ steps.format.outcome }}
+          LINT: ${{ steps.lint.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          ASTRO: ${{ steps.astro.outcome }}
+          CATALOG: ${{ steps.catalog.outcome }}
+        run: |
+          mark() {
+            if [ "$1" = 'success' ]; then echo '通过'; else echo '**失败**'; fi
+          }
+          {
+            echo '## 模型目录自动同步'
+            echo
+            echo '由 `sync-models` workflow 自动生成，仅改动 `pricing-api.json`。'
+            echo '快照已归一化排序并经 prettier 格式化，diff 中出现的都是实质变更。'
+            echo
+            if [ -s "$RUNNER_TEMP/model-sync-summary.md" ]; then
+              cat "$RUNNER_TEMP/model-sync-summary.md"
+            fi
+            echo
+            echo '## 自检结果'
+            echo
+            echo '| 检查 | 结果 |'
+            echo '| --- | --- |'
+            echo "| \`npm run format:check\` | $(mark "$FMT") |"
+            echo "| \`npm run lint\` | $(mark "$LINT") |"
+            echo "| \`npm run build\` | $(mark "$BUILD") |"
+            echo "| \`npm run check\` | $(mark "$ASTRO") |"
+            echo "| \`npm run check:catalog\` | $(mark "$CATALOG") |"
+            echo
+            echo '## 待补人工字段'
+            echo
+            if [ -s "$RUNNER_TEMP/catalog-check.md" ]; then
+              cat "$RUNNER_TEMP/catalog-check.md"
+            else
+              echo '（无）'
+            fi
+            echo
+            echo '空值是合法的设计意图：TPM / RPM、上下文窗口等真值字段拿不到就留空，'
+            echo '页面渲染 `—`，**不要填占位数字**。新模型不进首页精选 / WhyUs 网格 / 代码示例'
+            echo '也是正常的 —— 选集人工编排，计数自动派生。'
+            echo '维护方式见 `docs/model-catalog-maintenance.md`。'
+            echo
+            echo '---'
+            echo
+            echo '> 本 PR 由 `GITHUB_TOKEN` 创建，GitHub 不会为其触发 `ci.yml`（防递归）。'
+            echo '> 完整检查序列已在本 workflow 内跑过，结果见上方自检结果表；'
+            echo '> 若需要 PR 上的状态检查，close 再 reopen 本 PR 即可触发。'
+          } > "$RUNNER_TEMP/pr-body.md"
+
+      - name: Create pull request
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          base: main
+          branch: automation/model-catalog-sync
+          add-paths: pricing-api.json
+          commit-message: 'chore(models): 同步 tokenfleet.cn 模型目录快照'
+          title: 'chore(models): 同步 tokenfleet.cn 模型目录快照'
+          body-path: ${{ runner.temp }}/pr-body.md
+
+      - name: Fail if any check failed
+        if: always() && steps.diff.outputs.changed == 'true'
+        env:
+          FMT: ${{ steps.format.outcome }}
+          LINT: ${{ steps.lint.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          ASTRO: ${{ steps.astro.outcome }}
+          CATALOG: ${{ steps.catalog.outcome }}
+        run: |
+          for outcome in "$FMT" "$LINT" "$BUILD" "$ASTRO" "$CATALOG"; do
+            if [ "$outcome" != 'success' ]; then
+              echo '::error::自检序列存在失败项，详见上方步骤日志与 PR 正文的自检结果表。'
+              exit 1
+            fi
+          done

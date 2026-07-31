@@ -44,3 +44,6 @@ jobs:
 
       - name: Astro check
         run: npm run check
+
+      - name: Catalog check
+        run: npm run check:catalog

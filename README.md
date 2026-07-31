@@ -30,8 +30,8 @@ TokenFleet Landing is the public site for **TokenFleet**. It explains the produc
 | Languages               | Chinese at `/`, English at `/en`                                                          |
 | Main routes             | `/`, `/models`, `/en`, `/en/models`                                                       |
 | Machine-readable routes | `/sitemap.xml`, `/llms.txt`, `/pricing.md`, `/robots.txt`                                 |
-| Catalog source          | Root `pricing-api.json` snapshot                                                          |
-| Current catalog         | 15 AI models across 5 active vendors; 13 vendors registered in the source snapshot        |
+| Catalog source          | Root `pricing-api.json` snapshot, refreshed daily by the `sync-models` workflow           |
+| Current catalog         | 16 AI models across 5 active vendors; 14 vendors registered in the source snapshot        |
 | Quality gates           | ESLint, Prettier, `astro check`, production build, GitHub Actions CI                      |
 | Build output            | Static files in `dist/`                                                                   |
 
@@ -52,6 +52,7 @@ TokenFleet Landing is the public site for **TokenFleet**. It explains the produc
 
 - **Bilingual marketing site** with shared Astro components and a single `src/i18n.ts` dictionary for Chinese and English copy.
 - **Static, crawlable model catalog** generated from `pricing-api.json`, rendered as a single column of hairline-separated rows (`ModelRow.astro`) with vendor filters, model-type filters, search, name sorting, and URL-synced state.
+- **Automated catalog refresh**: a daily GitHub Actions workflow pulls the upstream pricing API, normalises the snapshot, and opens a pull request only when something actually changed; `npm run check:catalog` then cross-checks the hand-curated data against it.
 - **AI search surfaces** generated at build time: `llms.txt` for assistant context and `pricing.md` for machine-readable model pricing (input/output prices, billing mode, context window).
 - **Structured data pipeline** with site-level Organization / WebSite schema and homepage FAQPage schema.
 - **OpenAI-compatible integration examples** in `curl`, Python, and Node, with copy buttons and keyboard-accessible tabs.
@@ -75,7 +76,9 @@ TokenFleet Landing is the public site for **TokenFleet**. It explains the produc
 
 ### Requirements
 
-- Node.js 22.12 or newer
+- Node.js 22.12 or newer for the site itself
+- Node.js 22.18 or newer to run `npm run check:catalog` / `npm run sync:models` — both scripts import `src/data/*.ts` directly and rely on native TypeScript type stripping
+- `engines.node` in `package.json` declares the stricter of the two (22.18), because `check:catalog` is a CI gate and reproducing CI locally therefore needs it
 - npm
 
 ### Install
@@ -106,15 +109,17 @@ npm run preview
 
 ## Available Scripts
 
-| Command                | Description                                                 |
-| ---------------------- | ----------------------------------------------------------- |
-| `npm run dev`          | Start the Astro development server.                         |
-| `npm run build`        | Build the static site into `dist/`.                         |
-| `npm run preview`      | Preview the production build locally with host binding.     |
-| `npm run check`        | Run `astro check` for type and content diagnostics.         |
-| `npm run lint`         | Run ESLint across Astro, JS, MJS, TS, TSX, and JSX sources. |
-| `npm run format:check` | Verify formatting with Prettier without writing files.      |
-| `npm run astro`        | Run Astro CLI commands directly.                            |
+| Command                 | Description                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| `npm run dev`           | Start the Astro development server.                                               |
+| `npm run build`         | Build the static site into `dist/`.                                               |
+| `npm run preview`       | Preview the production build locally with host binding.                           |
+| `npm run check`         | Run `astro check` for type and content diagnostics.                               |
+| `npm run check:catalog` | Cross-check the hand-curated catalog data against `pricing-api.json`.             |
+| `npm run lint`          | Run ESLint across Astro, JS, MJS, TS, TSX, and JSX sources.                       |
+| `npm run format:check`  | Verify formatting with Prettier without writing files.                            |
+| `npm run sync:models`   | Refresh the `pricing-api.json` snapshot from the pricing API (needs credentials). |
+| `npm run astro`         | Run Astro CLI commands directly.                                                  |
 
 ## Routes
 
@@ -136,6 +141,7 @@ docs/                  Product, design, and maintenance notes
 public/                Static images, favicons, OG image, robots.txt, brand marks
 public/ai-brand-logo/  Local LobeHub vendor SVG snapshots used by catalog rows
 public/images/         Marketing imagery used across sections
+scripts/               Catalog sync and consistency-check CLIs (Node, no build step)
 src/assets/            Imported QR code assets
 src/components/        Page sections and reusable Astro components
 src/data/              Pricing loader, model metadata, and manually curated rate limits
@@ -154,10 +160,14 @@ src/styles/            Global CSS, design tokens, Tailwind entry, and button sty
 | `src/components/ModelsPage.astro`     | Shared Chinese / English model catalog page shell (hero + explorer).                                       |
 | `src/components/ModelsExplorer.astro` | Crawlable catalog list toolbar plus vanilla JS vendor / type filters, search, name sorting, and URL state. |
 | `src/components/ModelRow.astro`       | One model row in the catalog list (name, ID, type, TPM, RPM).                                              |
-| `src/components/FeaturedModels.astro` | Homepage featured-models gallery driven by a hardcoded `featuredModelIds` list.                            |
+| `src/components/FeaturedModels.astro` | Homepage featured-models gallery driven by `featuredModelIds` from `src/data/featured.ts`.                 |
 | `src/data/pricing.ts`                 | Imports `pricing-api.json`, maps vendors, formats prices, derives modalities, and exposes catalog data.    |
+| `src/data/featured.ts`                | The four editorial model-ID selections used by the homepage and the WhyUs section.                         |
+| `src/data/catalog-overrides.ts`       | Display names, model-type buckets, mono-only brand set, and icon slug derivation (import-free by design).  |
 | `src/data/model-meta.ts`              | Curated context window, max output, and vendor docs links (consumed by `pricing.md`).                      |
 | `src/data/model-limits.ts`            | Manually curated TPM / RPM rate limits per model (consumed by `ModelRow.astro`).                           |
+| `scripts/sync-pricing.mjs`            | Refreshes `pricing-api.json` from the pricing API with safety valves and a change summary.                 |
+| `scripts/check-catalog.mjs`           | Hard errors on orphaned model IDs, warnings on blank curated fields.                                       |
 | `src/i18n.ts`                         | Full bilingual UI copy, SEO titles, FAQ text, featured-model blurbs, and route labels.                     |
 | `src/seo/pages.ts`                    | Indexable page registry (home + models only; detail pages removed).                                        |
 | `src/seo/schema.ts`                   | Site-level Organization / WebSite / FAQPage JSON-LD.                                                       |
@@ -172,24 +182,28 @@ src/styles/            Global CSS, design tokens, Tailwind entry, and button sty
 
 ## Updating the Model Catalog
 
-The model catalog is generated at build time from the root `pricing-api.json` snapshot, which should mirror `https://tokenfleet.cn/api/pricing`. Model-related information is spread across seven maintenance points (the JSON snapshot plus six manually curated files). **The full step-by-step workflow — adding, removing, renaming models, and editing TPM / RPM — is documented in [`docs/model-catalog-maintenance.md`](docs/model-catalog-maintenance.md).**
+The model catalog is generated at build time from the root `pricing-api.json` snapshot, which mirrors `https://tokenfleet.cn/api/pricing`. The snapshot itself is refreshed automatically: `.github/workflows/sync-models.yml` runs `npm run sync:models` daily, and opens a pull request against `main` only when the upstream catalog actually changed. Everything the API does not expose stays hand-curated across eight further maintenance points. **The full step-by-step workflow — the sync automation, credential rotation, and adding / removing / renaming models or editing TPM / RPM — is documented in [`docs/model-catalog-maintenance.md`](docs/model-catalog-maintenance.md).**
 
-Quick reference of the maintenance points:
+Quick reference of the nine maintenance points:
 
-| File                                  | What you edit there                                                                   |
-| ------------------------------------- | ------------------------------------------------------------------------------------- |
-| `pricing-api.json`                    | Refresh the snapshot from the API; prices are read-only here.                         |
-| `src/data/pricing.ts`                 | Display-name, model-type, modality, vendor-slug, and icon overrides.                  |
-| `src/data/model-meta.ts`              | Context window, max output, vendor docs link (consumed by `pricing.md`).              |
-| `src/data/model-limits.ts`            | **TPM / RPM rate limits** shown in the `/models` list (the API does not expose them). |
-| `src/i18n.ts`                         | `featured.blurbs` — homepage featured-model descriptions (zh + en).                   |
-| `src/components/FeaturedModels.astro` | `featuredModelIds` — which models appear in the homepage gallery.                     |
-| `public/ai-brand-logo/`               | Local LobeHub brand-icon SVG snapshots.                                               |
+| File                              | Manual / automatic | What you edit there                                                                            |
+| --------------------------------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+| `pricing-api.json`                | **automatic**      | Never by hand — the sync script owns this file; prices are read-only here.                     |
+| `src/data/featured.ts`            | manual             | The four editorial ID selections: featured cards, WhyUs grid, hero code sample, endpoint demo. |
+| `src/data/catalog-overrides.ts`   | manual             | Display names, model-type buckets, mono-only brand set, icon slug derivation.                  |
+| `src/data/pricing.ts`             | manual             | Vendor slugs, English vendor names, modality heuristics, price formulas.                       |
+| `src/data/model-meta.ts`          | manual             | Context window, max output, vendor docs link (consumed by `pricing.md`).                       |
+| `src/data/model-limits.ts`        | manual             | **TPM / RPM rate limits** shown in the `/models` list (the API does not expose them).          |
+| `src/i18n.ts`                     | manual             | `featured.blurbs` (zh + en) and the vendor names named in marketing copy.                      |
+| `src/components/BrandStrip.astro` | manual             | The homepage vendor logo strip.                                                                |
+| `public/ai-brand-logo/`           | manual             | Local LobeHub brand-icon SVG snapshots.                                                        |
+
+Counts are never hand-written: model totals, active vendor totals, and the WhyUs "+N more" link all derive from the snapshot, so a refresh updates them on its own. The editorial selections above deliberately do **not** grow with the catalog — `npm run check:catalog` treats an orphaned ID as a hard error and a blank curated field as a warning.
 
 After any change, reproduce CI locally:
 
 ```sh
-npm run format:check && npm run lint && npm run build && npm run check
+npm run format:check && npm run lint && npm run build && npm run check && npm run check:catalog
 ```
 
 > [!IMPORTANT]
@@ -220,6 +234,9 @@ The production build output is written to `dist/` and can be deployed to any sta
 4. `npm run lint`
 5. `npm run build`
 6. `npm run check`
+7. `npm run check:catalog`
+
+`.github/workflows/sync-models.yml` runs on a daily schedule (and on demand) to refresh the catalog snapshot and open a pull request when it changed. It runs the same check sequence itself, because pull requests created with the default `GITHUB_TOKEN` do not trigger `ci.yml`.
 
 > [!TIP]
-> Before pushing, run `npm run format:check && npm run lint && npm run build && npm run check` to reproduce CI locally.
+> Before pushing, run `npm run format:check && npm run lint && npm run build && npm run check && npm run check:catalog` to reproduce CI locally.

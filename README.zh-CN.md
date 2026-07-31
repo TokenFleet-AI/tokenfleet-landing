@@ -30,8 +30,8 @@ TokenFleet Landing 是 **TokenFleet** 的公开站点。它以中文为默认语
 | 多语言       | 中文 `/`，英文 `/en`                                                         |
 | 主要路由     | `/`、`/models`、`/en`、`/en/models`                                          |
 | 机器可读路由 | `/sitemap.xml`、`/llms.txt`、`/pricing.md`、`/robots.txt`                    |
-| 目录数据源   | 根目录 `pricing-api.json` 快照                                               |
-| 当前目录     | 15 个 AI 模型，来自 5 家活跃厂商；源快照注册了 13 家厂商                     |
+| 目录数据源   | 根目录 `pricing-api.json` 快照，由 `sync-models` workflow 每日自动刷新       |
+| 当前目录     | 16 个 AI 模型，来自 5 家活跃厂商；源快照注册了 14 家厂商                     |
 | 质量门禁     | ESLint、Prettier、`astro check`、生产构建、GitHub Actions CI                 |
 | 构建产物     | 输出到 `dist/` 的静态文件                                                    |
 
@@ -52,6 +52,7 @@ TokenFleet Landing 是 **TokenFleet** 的公开站点。它以中文为默认语
 
 - **双语官网**：中文与英文共用 Astro 组件，所有界面文案集中在 `src/i18n.ts`。
 - **静态、可抓取的模型目录**：基于 `pricing-api.json` 生成，单列 hairline 分隔的列表行（`ModelRow.astro`），支持厂商筛选、类型筛选、搜索、名称排序与 URL 状态同步，并展示每个模型的 TPM / RPM 限速。
+- **模型目录自动同步**：GitHub Actions 每日拉取上游定价 API、归一化快照，只在确有变化时开 PR；`npm run check:catalog` 再把人工维护的数据与快照对账。
 - **AI 搜索入口**：构建期生成 `llms.txt` 站点上下文与 `pricing.md` 机器可读定价快照（输入 / 输出价、计费方式、上下文窗口）。
 - **结构化数据链路**：站点级 Organization / WebSite schema 与首页 FAQPage。
 - **OpenAI 兼容接入示例**：首屏提供 `curl`、Python、Node 示例，支持复制与键盘可用的 tab。
@@ -75,7 +76,9 @@ TokenFleet Landing 是 **TokenFleet** 的公开站点。它以中文为默认语
 
 ### 环境要求
 
-- Node.js 22.12 或更高版本
+- 站点本身：Node.js 22.12 或更高版本
+- 运行 `npm run check:catalog` / `npm run sync:models`：Node.js 22.18 或更高版本 —— 这两个脚本直接 import `src/data/*.ts`，依赖原生 TypeScript type stripping
+- `package.json` 的 `engines.node` 声明为两者中更严的 22.18 —— 因为 `check:catalog` 是 CI 门禁，本地复现 CI 就需要它
 - npm
 
 ### 安装依赖
@@ -106,15 +109,17 @@ npm run preview
 
 ## 可用脚本
 
-| 命令                   | 说明                                              |
-| ---------------------- | ------------------------------------------------- |
-| `npm run dev`          | 启动 Astro 开发服务器。                           |
-| `npm run build`        | 构建静态站点到 `dist/`。                          |
-| `npm run preview`      | 以 host 绑定方式本地预览生产构建。                |
-| `npm run check`        | 运行 `astro check` 做类型与内容诊断。             |
-| `npm run lint`         | 对 Astro、JS、MJS、TS、TSX、JSX 源码运行 ESLint。 |
-| `npm run format:check` | 使用 Prettier 校验格式，不写回文件。              |
-| `npm run astro`        | 直接运行 Astro CLI 命令。                         |
+| 命令                    | 说明                                                |
+| ----------------------- | --------------------------------------------------- |
+| `npm run dev`           | 启动 Astro 开发服务器。                             |
+| `npm run build`         | 构建静态站点到 `dist/`。                            |
+| `npm run preview`       | 以 host 绑定方式本地预览生产构建。                  |
+| `npm run check`         | 运行 `astro check` 做类型与内容诊断。               |
+| `npm run check:catalog` | 将人工维护的目录数据与 `pricing-api.json` 对账。    |
+| `npm run lint`          | 对 Astro、JS、MJS、TS、TSX、JSX 源码运行 ESLint。   |
+| `npm run format:check`  | 使用 Prettier 校验格式，不写回文件。                |
+| `npm run sync:models`   | 从定价 API 刷新 `pricing-api.json` 快照（需凭证）。 |
+| `npm run astro`         | 直接运行 Astro CLI 命令。                           |
 
 ## 页面路由
 
@@ -136,6 +141,7 @@ docs/                  产品、设计与维护文档
 public/                静态图片、favicon、OG 图、robots.txt 与品牌标识
 public/ai-brand-logo/  列表行使用的 LobeHub 厂商 SVG 本地快照
 public/images/         各 section 使用的营销图像
+scripts/               目录同步与一致性校验 CLI（Node，无构建步骤）
 src/assets/            被组件 import 的二维码资源
 src/components/        页面区块与可复用 Astro 组件
 src/data/              价格加载、模型元信息与人工维护的限速数据
@@ -154,10 +160,14 @@ src/styles/            全局 CSS、设计 token、Tailwind 入口与按钮样�
 | `src/components/ModelsPage.astro`     | 中英文模型目录页的共享页面外壳（hero + explorer）。                               |
 | `src/components/ModelsExplorer.astro` | 可抓取目录列表工具栏，以及 Vanilla JS 厂商 / 类型筛选、搜索、名称排序、URL 状态。 |
 | `src/components/ModelRow.astro`       | 目录列表中的一行模型（名称、ID、类型、TPM、RPM）。                                |
-| `src/components/FeaturedModels.astro` | 首页精选模型区，由硬编码的 `featuredModelIds` 列表驱动。                          |
+| `src/components/FeaturedModels.astro` | 首页精选模型区，由 `src/data/featured.ts` 的 `featuredModelIds` 驱动。            |
 | `src/data/pricing.ts`                 | 导入 `pricing-api.json`，处理厂商、价格格式、模型形态与目录数据。                 |
+| `src/data/featured.ts`                | 首页与 WhyUs 使用的四组人工模型 ID 选集。                                         |
+| `src/data/catalog-overrides.ts`       | 展示名、模型类型归类、无彩色品牌集与图标 slug 推导（刻意保持无 import）。         |
 | `src/data/model-meta.ts`              | 人工维护的上下文窗口、最大输出、官方文档链接（被 `pricing.md` 消费）。            |
 | `src/data/model-limits.ts`            | 人工维护的每个模型 TPM / RPM 限速（被 `ModelRow.astro` 消费）。                   |
+| `scripts/sync-pricing.mjs`            | 带安全阀与变更摘要地从定价 API 刷新 `pricing-api.json`。                          |
+| `scripts/check-catalog.mjs`           | 孤儿模型 ID 报硬错误，人工字段留空报软警告。                                      |
 | `src/i18n.ts`                         | 双语 UI 文案、SEO 标题、FAQ、精选模型一句话描述与路由标签。                       |
 | `src/seo/pages.ts`                    | 可索引页面注册表（仅首页 + 模型列表页；详情页已移除）。                           |
 | `src/seo/schema.ts`                   | 站点级 Organization / WebSite / FAQPage JSON-LD。                                 |
@@ -172,24 +182,28 @@ src/styles/            全局 CSS、设计 token、Tailwind 入口与按钮样�
 
 ## 更新模型目录
 
-模型目录在构建时读取根目录 `pricing-api.json` 快照；该文件应与 `https://tokenfleet.cn/api/pricing` 保持一致。模型相关信息分散在七个维护点（JSON 快照 + 六个人工维护的文件）。**完整操作流程——新增 / 下线 / 改名模型，以及调整 TPM / RPM——见 [`docs/model-catalog-maintenance.md`](docs/model-catalog-maintenance.md)。**
+模型目录在构建时读取根目录 `pricing-api.json` 快照；该文件镜像 `https://tokenfleet.cn/api/pricing`，并且**已经自动刷新**：`.github/workflows/sync-models.yml` 每日跑 `npm run sync:models`，只在上游确有变化时向 `main` 开一个 PR。API 不暴露的信息则分散在另外八个人工维护点。**完整操作流程——同步机制、凭证轮换，以及新增 / 下线 / 改名模型与调整 TPM / RPM——见 [`docs/model-catalog-maintenance.md`](docs/model-catalog-maintenance.md)。**
 
-各维护点速查：
+九个维护点速查：
 
-| 文件                                  | 在此编辑                                                     |
-| ------------------------------------- | ------------------------------------------------------------ |
-| `pricing-api.json`                    | 从 API 刷新快照；价格在此只读。                              |
-| `src/data/pricing.ts`                 | 展示名、模型类型、模态、厂商 slug、图标的覆盖表。            |
-| `src/data/model-meta.ts`              | 上下文窗口、最大输出、官方文档链接（被 `pricing.md` 消费）。 |
-| `src/data/model-limits.ts`            | **TPM / RPM 限速**（`/models` 列表展示，API 不暴露该字段）。 |
-| `src/i18n.ts`                         | `featured.blurbs`：首页精选模型的一句话描述（中英两份）。    |
-| `src/components/FeaturedModels.astro` | `featuredModelIds`：首页精选区展示哪些模型。                 |
-| `public/ai-brand-logo/`               | LobeHub 厂商图标 SVG 本地快照。                              |
+| 文件                              | 人工 / 自动 | 在此编辑                                                        |
+| --------------------------------- | ----------- | --------------------------------------------------------------- |
+| `pricing-api.json`                | **自动**    | 不要手改 —— 由同步脚本独占写入；价格在此只读。                  |
+| `src/data/featured.ts`            | 人工        | 四组人工选集：首页精选卡、WhyUs 网格、代码示例、endpoint demo。 |
+| `src/data/catalog-overrides.ts`   | 人工        | 展示名、模型类型归类、无彩色品牌集、图标 slug 推导。            |
+| `src/data/pricing.ts`             | 人工        | 厂商 slug、厂商英文名、模态启发、价格公式。                     |
+| `src/data/model-meta.ts`          | 人工        | 上下文窗口、最大输出、官方文档链接（被 `pricing.md` 消费）。    |
+| `src/data/model-limits.ts`        | 人工        | **TPM / RPM 限速**（`/models` 列表展示，API 不暴露该字段）。    |
+| `src/i18n.ts`                     | 人工        | `featured.blurbs`（中英两份），以及文案里举例的厂商名。         |
+| `src/components/BrandStrip.astro` | 人工        | 首页厂商 logo 条。                                              |
+| `public/ai-brand-logo/`           | 人工        | LobeHub 厂商图标 SVG 本地快照。                                 |
+
+计数不需要人工维护：模型总数、活跃厂商数与 WhyUs 的「+N 更多」全部从快照派生，同步后自动跟上。上表的人工选集则刻意不随目录膨胀 —— `npm run check:catalog` 把孤儿 ID 判为硬错误，把留空的人工字段判为软警告。
 
 每次改动后，本地复现 CI：
 
 ```sh
-npm run format:check && npm run lint && npm run build && npm run check
+npm run format:check && npm run lint && npm run build && npm run check && npm run check:catalog
 ```
 
 > [!IMPORTANT]
@@ -220,6 +234,9 @@ npm run format:check && npm run lint && npm run build && npm run check
 4. `npm run lint`
 5. `npm run build`
 6. `npm run check`
+7. `npm run check:catalog`
+
+`.github/workflows/sync-models.yml` 每日定时（也可手动触发）刷新目录快照，有变化时开 PR。它会在 workflow 内自跑同一套检查序列 —— 因为用默认 `GITHUB_TOKEN` 创建的 PR 不会触发 `ci.yml`。
 
 > [!TIP]
-> 推送前运行 `npm run format:check && npm run lint && npm run build && npm run check`，可以在本地提前复现 CI。
+> 推送前运行 `npm run format:check && npm run lint && npm run build && npm run check && npm run check:catalog`，可以在本地提前复现 CI。
