@@ -5,6 +5,10 @@
  * + 全量模型清单。语言为英文（AI 系统惯例）；站点双语，链接同时给出 zh canonical 与
  * /en 版本。模型清单走 `loadModels()`，增删自动同步。
  *
+ * 输出必须全篇 ASCII：线上该文件的响应头是 `text/html` 且不带 `charset`，浏览器会用
+ * 本地默认编码解 UTF-8 字节，中文名与 em dash 都会显示成乱码。厂商名一律走
+ * `vendorDisplayName(v, 'en')`。
+ *
  * `trailingSlash: never`；URL = /llms.txt。
  */
 import type { APIRoute } from 'astro';
@@ -30,7 +34,7 @@ export const GET: APIRoute = ({ site }) => {
     '',
     '> TokenFleet is a one-stop AI model API gateway. It aggregates production',
     `> LLM, image, video and audio models from ${vendors.length} vendors`,
-    `> (${vendorList}) behind a single OpenAI-compatible endpoint — one API key,`,
+    `> (${vendorList}) behind a single OpenAI-compatible endpoint: one API key,`,
     '> one RMB business invoice, with direct mainland-China routing and',
     '> millisecond latency. Built for engineering teams who need multi-vendor',
     '> model access without juggling separate accounts, SDKs and cross-border',

@@ -106,14 +106,24 @@ export function vendorSlug(v: Vendor): string {
   return v.name.toLowerCase().replace(/\s+/g, '-');
 }
 
+/**
+ * 英文展示名 —— 上游 API 的 `vendors[].name` 对国内厂商返回中文。除 UI 的英文
+ * 语言版外，`/llms.txt` 与 `/pricing.md` 也依赖它保持全篇 ASCII：线上这两个
+ * 文件的响应头不带 `charset`，任何非 ASCII 字符在浏览器里都会解成乱码。
+ * 新增中文名厂商时必须在此登记，否则中文名会直接漏进这两个文件。
+ */
+const vendorNameEn: Record<number, string> = {
+  8: 'Zhipu',
+  9: 'Kuaishou',
+  11: 'Xiaomi',
+  13: 'ByteDance',
+};
+
 export function vendorDisplayName(
   v: Vendor,
   locale: 'zh' | 'en' = 'zh'
 ): string {
-  if (locale === 'en') {
-    if (v.id === 8) return 'Zhipu';
-    if (v.id === 9) return 'Kuaishou';
-  }
+  if (locale === 'en') return vendorNameEn[v.id] ?? v.name;
   return v.name;
 }
 

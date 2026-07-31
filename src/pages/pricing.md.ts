@@ -6,6 +6,10 @@
  * 全部数据走 `priceBreakdown()` / `loadModels()` / `metaOf()` 单一真值源，与模型列表页
  * 同源，模型增删 / 调价自动同步。语言为英文（AI 系统惯例），model id / 价格语言中立。
  *
+ * 输出必须全篇 ASCII：线上该文件的响应头是 `text/html` 且不带 `charset`，浏览器会用
+ * 本地默认编码解 UTF-8 字节，中文名与 em dash 都会显示成乱码。厂商名一律走
+ * `vendorDisplayName(v, 'en')`，缺失值用 `n/a` 而非 `—`。
+ *
  * `trailingSlash: never`；URL = /pricing.md。从页脚链接可达。
  */
 import type { APIRoute } from 'astro';
@@ -13,13 +17,14 @@ import {
   loadModels,
   usedVendors,
   priceBreakdown,
+  vendorDisplayName,
   fmtUsd,
 } from '../data/pricing.ts';
 import { metaOf } from '../data/model-meta.ts';
 
 function contextLabel(name: string): string {
   const k = metaOf(name)?.contextK;
-  if (!k) return '—';
+  if (!k) return 'n/a';
   return k >= 1000 ? `${k / 1000}M` : `${k}K`;
 }
 
@@ -49,7 +54,7 @@ export const GET: APIRoute = ({ site }) => {
     const group = models.filter((m) => m.vendor_id === vendor.id);
     if (group.length === 0) continue;
 
-    lines.push(`## ${vendor.name}`, '');
+    lines.push(`## ${vendorDisplayName(vendor, 'en')}`, '');
     lines.push(
       '| Model | Input /1M | Output /1M | Billing | Context | Detail |'
     );
@@ -65,7 +70,7 @@ export const GET: APIRoute = ({ site }) => {
 
       if (p.kind === 'call') {
         lines.push(
-          `| \`${m.model_name}\` | ${fmtUsd(p.inputUsd)} / call | — | per call | ${ctx} | ${detail} |`
+          `| \`${m.model_name}\` | ${fmtUsd(p.inputUsd)} / call | n/a | per call | ${ctx} | ${detail} |`
         );
       } else if (p.tiers && p.tiers.length > 0) {
         const first = p.tiers[0];
@@ -73,7 +78,7 @@ export const GET: APIRoute = ({ site }) => {
           `| \`${m.model_name}\` | ${fmtUsd(first.inputUsd)} | ${fmtUsd(first.outputUsd)} | token (graduated) | ${ctx} | ${detail} |`
         );
         notes.push(
-          `- \`${m.model_name}\`: graduated pricing, first tier shown — see ${detail}`
+          `- \`${m.model_name}\`: graduated pricing, first tier shown - see ${detail}`
         );
       } else {
         lines.push(
