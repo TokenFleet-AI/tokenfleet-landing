@@ -23,6 +23,7 @@ export default [
       '.codex/**',
       '.trellis/**',
       '.impeccable/**',
+      '.pi/**',
     ],
   },
   js.configs.recommended,

@@ -19,12 +19,13 @@ import {
   modalityLabel,
 } from '../data/pricing.ts';
 import { DASHBOARD_URL, DOCS_URL, SIGN_IN_URL } from '../site-links.ts';
+import { absUrl } from '../base.ts';
 
 export const GET: APIRoute = ({ site }) => {
   if (!site) {
     throw new Error('astro.config.mjs 缺少 `site`，无法生成绝对链接');
   }
-  const abs = (path: string) => new URL(path, site).toString();
+  const abs = (path: string) => absUrl(path, site);
   const models = loadModels();
   const vendors = usedVendors();
   const vendorList = vendors.map((v) => vendorDisplayName(v, 'en')).join(', ');

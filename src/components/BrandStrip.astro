@@ -1,5 +1,6 @@
 ---
 import { i18n, type Locale } from '../i18n.ts';
+import { withBase } from '../base.ts';
 
 interface Props {
   locale?: Locale;
@@ -27,7 +28,7 @@ const loop = [...logos, ...logos];
         {
           loop.map(([file, label], index) => (
             <img
-              src={`/ai-brand-logo/${file}`}
+              src={withBase(`/ai-brand-logo/${file}`)}
               alt={index < logos.length ? label : ''}
               loading="lazy"
               aria-hidden={index >= logos.length ? 'true' : undefined}

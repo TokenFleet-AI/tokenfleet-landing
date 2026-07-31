@@ -9,12 +9,13 @@
  * 后以 `set:html` 注入 `<script type="application/ld+json">`。
  */
 import { DASHBOARD_URL, DOCS_URL, SIGN_IN_URL } from '../site-links.ts';
+import { absUrl } from '../base.ts';
 
 const ORG_NAME = 'TokenFleet';
 
-/** 把站内绝对路径换算成基于 `site` 的完整 https URL。 */
+/** 把站内绝对路径换算成基于 `site` + base 的完整 https URL。 */
 function abs(site: URL | string, path: string): string {
-  return new URL(path, site).toString();
+  return absUrl(path, site);
 }
 
 /** 母公司法人主体（与 footer `companyName` 一致），用于 schema `legalName`。 */
@@ -32,7 +33,7 @@ const ORG_DESCRIPTION =
 
 /** schema.org Organization — 站点背后的实体。 */
 export function organizationSchema(site: URL | string) {
-  const home = new URL(site).toString();
+  const home = abs(site, '/');
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -58,7 +59,7 @@ export function organizationSchema(site: URL | string) {
 
 /** schema.org WebSite — 站点本身。 */
 export function websiteSchema(site: URL | string) {
-  const home = new URL(site).toString();
+  const home = abs(site, '/');
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',

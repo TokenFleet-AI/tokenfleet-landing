@@ -12,6 +12,7 @@
 
 import Wordmark from './Wordmark.astro';
 import { i18n, localePath, otherLocale, type Locale } from '../i18n.ts';
+import { withBase } from '../base.ts';
 import { DASHBOARD_URL, DOCS_URL, SIGN_IN_URL } from '../site-links.ts';
 
 interface Props {
@@ -23,18 +24,18 @@ const { locale = 'zh', currentPath = '/' } = Astro.props as Props;
 const t = i18n[locale];
 const altLocale = otherLocale(locale);
 const navLinks = [
-  { href: localePath(locale, '/models'), label: t.nav.links.models },
+  { href: withBase(localePath(locale, '/models')), label: t.nav.links.models },
   {
     href: DOCS_URL,
     label: t.nav.links.docs,
     external: true,
   },
   {
-    href: `${localePath(locale, '/')}#enterprise`,
+    href: `${withBase(localePath(locale, '/'))}#enterprise`,
     label: t.nav.links.enterprise,
   },
 ];
-const languageHref = localePath(altLocale, currentPath);
+const languageHref = withBase(localePath(altLocale, currentPath));
 ---
 
 <header class="nav" role="banner">

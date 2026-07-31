@@ -12,6 +12,7 @@ interface Props {
 }
 
 import { i18n, ogLocale } from '../i18n.ts';
+import { withBase, absUrl, hasBasePath } from '../base.ts';
 import { organizationSchema, websiteSchema } from '../seo/schema.ts';
 
 const {
@@ -27,7 +28,11 @@ const {
 } = Astro.props as Props;
 
 const t = i18n[locale];
-const ogImageUrl = new URL(ogImage, Astro.site).toString();
+const ogImageUrl = absUrl(ogImage, Astro.site);
+
+// 子路径部署（GitHub Pages 项目站点）＝ 预览环境：整站 noindex，避免与
+// tokenfleet.cn 构成重复内容抢排名。切回自定义域名（base 为空）后自动恢复可索引。
+const isNoindex = noindex || hasBasePath;
 
 // 站点级结构化数据始终输出；页面可经 `jsonLd` prop 追加自有 schema
 // （供子任务 B 注入 Product / ItemList）。
@@ -53,11 +58,25 @@ import '../styles/tailwind.css';
     />
     <meta name="theme-color" content="#533afd" />
     <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href={withBase('/favicon-32.png')}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href={withBase('/favicon-48.png')}
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href={withBase('/apple-touch-icon.png')}
+    />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex" />}
+    {isNoindex && <meta name="robots" content="noindex" />}
     {
       alternateZh && (
         <link rel="alternate" hreflang="zh-CN" href={alternateZh} />

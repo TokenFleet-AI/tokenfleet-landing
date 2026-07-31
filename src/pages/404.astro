@@ -9,6 +9,7 @@
 import Base from '../layouts/Base.astro';
 import TopNav from '../components/TopNav.astro';
 import Footer from '../components/Footer.astro';
+import { withBase } from '../base.ts';
 
 const locale = 'zh';
 ---
@@ -23,11 +24,15 @@ const locale = 'zh';
         链接可能已失效，或地址有误。回到首页，或直接浏览全部可用模型。
       </p>
       <div class="notfound__actions">
-        <a href="/" class="btn btn--primary btn--lg">返回首页</a>
-        <a href="/models" class="btn btn--outline btn--lg">浏览模型</a>
+        <a href={withBase('/')} class="btn btn--primary btn--lg">返回首页</a>
+        <a href={withBase('/models')} class="btn btn--outline btn--lg"
+          >浏览模型</a
+        >
       </div>
       <p class="notfound__alt">
-        Looking for the English site? <a href="/en">Go to tokenfleet.cn/en</a>.
+        Looking for the English site? <a href={withBase('/en')}
+          >Go to the English version</a
+        >.
       </p>
     </div>
   </main>

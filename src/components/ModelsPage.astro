@@ -5,6 +5,7 @@ import Footer from './Footer.astro';
 import ModelsExplorer from './ModelsExplorer.astro';
 import { totalModelCount, usedVendors } from '../data/pricing.ts';
 import { i18n, localePath, type Locale } from '../i18n.ts';
+import { absUrl } from '../base.ts';
 
 interface Props {
   locale: Locale;
@@ -21,9 +22,9 @@ const heroTitle = t.models.title(total).split('\n');
   locale={locale}
   title={t.seo.modelsTitle(total)}
   description={t.seo.modelsDescription(total, vendorCount)}
-  canonical={new URL(localePath(locale, '/models'), Astro.site).toString()}
-  alternateZh={new URL('/models', Astro.site).toString()}
-  alternateEn={new URL('/en/models', Astro.site).toString()}
+  canonical={absUrl(localePath(locale, '/models'), Astro.site)}
+  alternateZh={absUrl('/models', Astro.site)}
+  alternateEn={absUrl('/en/models', Astro.site)}
 >
   <TopNav locale={locale} currentPath="/models" />
   <main id="main">

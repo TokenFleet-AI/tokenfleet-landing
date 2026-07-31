@@ -26,6 +26,7 @@ import wechatGroupQR from '../assets/QRCode/wechat-group.jpg';
 import wechatSubQR from '../assets/QRCode/wechat-sub.jpg';
 import douyinQR from '../assets/QRCode/douyin.webp';
 import { i18n, localePath, type Locale } from '../i18n.ts';
+import { withBase } from '../base.ts';
 import { DOCS_URL } from '../site-links.ts';
 
 interface Props {
@@ -38,10 +39,13 @@ const cols = [
   {
     title: t.footer.cols.product,
     items: [
-      { label: t.footer.links.models, href: localePath(locale, '/models') },
+      {
+        label: t.footer.links.models,
+        href: withBase(localePath(locale, '/models')),
+      },
       {
         label: t.footer.links.enterprise,
-        href: `${localePath(locale, '/')}#enterprise`,
+        href: `${withBase(localePath(locale, '/'))}#enterprise`,
       },
       {
         label: t.footer.links.status,
@@ -74,16 +78,16 @@ const cols = [
     items: [
       {
         label: t.footer.links.sla,
-        href: `${localePath(locale, '/')}#enterprise`,
+        href: `${withBase(localePath(locale, '/'))}#enterprise`,
       },
       {
         label: t.footer.links.pricingMd,
-        href: '/pricing.md',
+        href: withBase('/pricing.md'),
         external: true,
       },
       {
         label: t.footer.links.llms,
-        href: '/llms.txt',
+        href: withBase('/llms.txt'),
         external: true,
       },
       {
@@ -193,7 +197,7 @@ const follow = [
                   {item.icon === 'douyin' && (
                     <img
                       class="footer__follow-logo"
-                      src="/social/douyin-logo.svg"
+                      src={withBase('/social/douyin-logo.svg')}
                       width="18"
                       height="20"
                       alt=""

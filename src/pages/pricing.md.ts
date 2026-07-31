@@ -21,6 +21,7 @@ import {
   fmtUsd,
 } from '../data/pricing.ts';
 import { metaOf } from '../data/model-meta.ts';
+import { absUrl } from '../base.ts';
 
 function contextLabel(name: string): string {
   const k = metaOf(name)?.contextK;
@@ -32,7 +33,7 @@ export const GET: APIRoute = ({ site }) => {
   if (!site) {
     throw new Error('astro.config.mjs 缺少 `site`，无法生成绝对链接');
   }
-  const abs = (path: string) => new URL(path, site).toString();
+  const abs = (path: string) => absUrl(path, site);
   const models = loadModels();
   const vendors = usedVendors();
   const updated = new Date().toISOString().slice(0, 10);

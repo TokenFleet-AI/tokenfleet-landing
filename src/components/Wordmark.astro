@@ -13,6 +13,7 @@ interface Props {
 }
 
 import { i18n, localePath } from '../i18n.ts';
+import { withBase } from '../base.ts';
 
 const {
   size = 'md',
@@ -24,15 +25,15 @@ const t = i18n[locale];
 ---
 
 <a
-  href={localePath(locale, '/')}
+  href={withBase(localePath(locale, '/'))}
   class={`wordmark wordmark--${size} wordmark--${variant} ${className}`}
   aria-label={t.homeAria}
 >
   <picture class="wordmark__mark" aria-hidden="true">
-    <source srcset="/xy-mark-small.webp" type="image/webp" />
+    <source srcset={withBase('/xy-mark-small.webp')} type="image/webp" />
     <img
       class="wordmark__mark-img"
-      src="/xy-mark-small.png"
+      src={withBase('/xy-mark-small.png')}
       width="160"
       height="110"
       alt=""

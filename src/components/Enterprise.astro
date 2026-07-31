@@ -12,6 +12,7 @@
  * / 可定制" wording until the legal team confirms each badge.
  */
 import { i18n, type Locale } from '../i18n.ts';
+import { withBase } from '../base.ts';
 import SalesQrLightbox from './SalesQrLightbox.astro';
 
 interface Props {
@@ -25,9 +26,40 @@ const labels = t.enterprise.labels.map(([eyebrow, title, body]) => ({
   title,
   body,
 }));
+
+/**
+ * 背景图走 CSS 自定义属性，而不是在 `<style>` 里写死 `url('/images/...')`：
+ * `<style>` 是纯 CSS，拿不到 `withBase()`，子路径部署（GitHub Pages）下写死的
+ * 绝对路径会 404。变量定义在本组件根 `<section>` 上，`.enterprise__bg` 继承。
+ */
+const bgVars = [
+  [
+    '--enterprise-bg-lg-avif',
+    '/images/enterprise-production-scale-bg-1600.avif',
+  ],
+  [
+    '--enterprise-bg-lg-webp',
+    '/images/enterprise-production-scale-bg-1600.webp',
+  ],
+  [
+    '--enterprise-bg-sm-avif',
+    '/images/enterprise-production-scale-bg-960.avif',
+  ],
+  [
+    '--enterprise-bg-sm-webp',
+    '/images/enterprise-production-scale-bg-960.webp',
+  ],
+]
+  .map(([name, path]) => `${name}: url('${withBase(path)}')`)
+  .join('; ');
 ---
 
-<section class="enterprise" id="enterprise" aria-labelledby="enterprise-title">
+<section
+  class="enterprise"
+  id="enterprise"
+  aria-labelledby="enterprise-title"
+  style={bgVars}
+>
   <div class="enterprise__bg" aria-hidden="true"></div>
 
   <div class="container enterprise__inner">
@@ -112,10 +144,8 @@ const labels = t.enterprise.labels.map(([eyebrow, title, body]) => ({
       ),
       linear-gradient(180deg, rgba(28, 30, 84, 0.2), rgba(11, 14, 36, 0.88)),
       image-set(
-        url('/images/enterprise-production-scale-bg-1600.avif')
-          type('image/avif'),
-        url('/images/enterprise-production-scale-bg-1600.webp')
-          type('image/webp')
+        var(--enterprise-bg-lg-avif) type('image/avif'),
+        var(--enterprise-bg-lg-webp) type('image/webp')
       );
     background-size: cover;
     background-position: center right;
@@ -206,10 +236,8 @@ const labels = t.enterprise.labels.map(([eyebrow, title, body]) => ({
         ),
         linear-gradient(180deg, rgba(28, 30, 84, 0.24), rgba(11, 14, 36, 0.9)),
         image-set(
-          url('/images/enterprise-production-scale-bg-960.avif')
-            type('image/avif'),
-          url('/images/enterprise-production-scale-bg-960.webp')
-            type('image/webp')
+          var(--enterprise-bg-sm-avif) type('image/avif'),
+          var(--enterprise-bg-sm-webp) type('image/webp')
         );
       background-size: cover;
       background-position: 58% center;

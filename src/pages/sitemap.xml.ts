@@ -9,13 +9,14 @@
  */
 import type { APIRoute } from 'astro';
 import { seoPages } from '../seo/pages.ts';
+import { absUrl } from '../base.ts';
 
 export const GET: APIRoute = ({ site }) => {
   if (!site) {
     throw new Error('astro.config.mjs 缺少 `site`，无法生成绝对 sitemap URL');
   }
 
-  const abs = (path: string) => new URL(path, site).toString();
+  const abs = (path: string) => absUrl(path, site);
 
   const urlBlock = (loc: string, zhHref: string, enHref: string) =>
     [
