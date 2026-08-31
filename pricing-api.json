@@ -40,7 +40,7 @@
       "model_price": 0,
       "owner_by": "",
       "completion_ratio": 3.000000000175,
-      "enable_groups": ["default", "svip", "test", "vip"],
+      "enable_groups": ["default", "svip", "vip"],
       "supported_endpoint_types": ["openai"]
     },
     {
@@ -51,7 +51,7 @@
       "model_price": 0,
       "owner_by": "",
       "completion_ratio": 1.5,
-      "enable_groups": ["default", "ds-vip", "ds_65", "svip", "vip"],
+      "enable_groups": ["default", "svip", "vip"],
       "supported_endpoint_types": ["openai"]
     },
     {
@@ -63,11 +63,34 @@
       "owner_by": "",
       "completion_ratio": 2.0000000007,
       "cache_ratio": 0.020000000308,
-      "enable_groups": ["default", "ds-vip", "ds_65", "svip", "test", "vip"],
-      "supported_endpoint_types": ["openai"]
+      "enable_groups": ["default", "ds-vip", "svip", "vip"],
+      "supported_endpoint_types": ["openai"],
+      "billing_mode": "tiered_expr",
+      "billing_expr": "(tier(\"基准价\", p * 0.2142857143 + c * 0.6428571429 + cr * 0.0071428571)) * (hour(\"Asia/Shanghai\") >= 9 && hour(\"Asia/Shanghai\") < 12 ? 2 : 1) * (hour(\"Asia/Shanghai\") >= 14 && hour(\"Asia/Shanghai\") < 18 ? 2 : 1)"
     },
     {
-      "model_name": "deepseek-v4-pro",
+      "model_name": "deepseek-v4-flash-0731",
+      "vendor_id": 5,
+      "quota_type": 0,
+      "model_ratio": 0.0714285714,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 2.0000000007,
+      "cache_ratio": 0.020000000308,
+      "enable_groups": [
+        "default",
+        "ds-vip",
+        "ds-vip-anthropic",
+        "ds_8",
+        "svip",
+        "test"
+      ],
+      "supported_endpoint_types": ["anthropic", "openai"],
+      "billing_mode": "tiered_expr",
+      "billing_expr": "(tier(\"基准价\", p * 0.2142857143 + c * 0.6428571429 + cr * 0.0071428571)) * (hour(\"Asia/Shanghai\") >= 9 && hour(\"Asia/Shanghai\") < 12 ? 2 : 1) * (hour(\"Asia/Shanghai\") >= 14 && hour(\"Asia/Shanghai\") < 18 ? 2 : 1)"
+    },
+    {
+      "model_name": "deepseek-v4-pro-0424",
       "vendor_id": 5,
       "quota_type": 0,
       "model_ratio": 0.857142857,
@@ -75,8 +98,8 @@
       "owner_by": "",
       "completion_ratio": 2.00000000035,
       "cache_ratio": 0.008333333335,
-      "enable_groups": ["default", "ds-vip", "ds_25", "ds_4", "svip", "vip"],
-      "supported_endpoint_types": ["anthropic", "open"]
+      "enable_groups": ["default", "ds_4", "svip"],
+      "supported_endpoint_types": ["openai"]
     },
     {
       "model_name": "doubao-seedance-2-0-260128",
@@ -135,6 +158,30 @@
       "completion_ratio": 3.5,
       "cache_ratio": 0.250000000219,
       "enable_groups": ["default", "svip", "test", "vip"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "glm-5.3",
+      "vendor_id": 8,
+      "quota_type": 0,
+      "model_ratio": 0.57142857145,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 3.499999999869,
+      "cache_ratio": 0.249999999978,
+      "enable_groups": ["default", "glm-vip", "test"],
+      "supported_endpoint_types": ["openai"]
+    },
+    {
+      "model_name": "glm-5.3-flash",
+      "vendor_id": 8,
+      "quota_type": 0,
+      "model_ratio": 0.05714285715,
+      "model_price": 0,
+      "owner_by": "",
+      "completion_ratio": 3.499999999563,
+      "cache_ratio": 0.287500000339,
+      "enable_groups": ["default", "glm-vip", "test"],
       "supported_endpoint_types": ["openai"]
     },
     {
@@ -198,7 +245,7 @@
       "owner_by": "",
       "completion_ratio": 5.00000000007,
       "cache_ratio": 0.099999999997,
-      "enable_groups": ["default", "test"],
+      "enable_groups": ["default", "k3_65", "test"],
       "supported_endpoint_types": ["openai"]
     }
   ],
